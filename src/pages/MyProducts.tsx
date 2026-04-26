@@ -1,4 +1,5 @@
 import { Refrigerator } from "lucide-react";
+import logo from "@/assets/whirlpool-logo.png";
 import { BackHeader } from "@/components/layout/BackHeader";
 import { useInvestments } from "@/hooks/useInvestments";
 import { useAuth } from "@/context/AuthContext";
@@ -23,7 +24,7 @@ export default function MyProducts() {
             <p className="font-semibold text-sm">Mon produit</p>
             <p className="text-2xl font-bold mt-1">{data.length}</p>
           </div>
-          <div className="text-primary font-extrabold text-lg">Ocean<span className="text-accent">P</span></div>
+          <img src={logo} alt="Whirlpool" className="h-7 w-auto" />
         </div>
 
         <div className="mt-8 space-y-3">

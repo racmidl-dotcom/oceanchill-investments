@@ -2,7 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { useAuth } from "@/context/AuthContext";
 import { formatMoney, getCountry } from "@/lib/countries";
-import { Anchor, ChevronRight, CreditCard, Wallet, Calendar, Coins, Info, PlayCircle, Headphones, BarChart3, Building2, Power } from "lucide-react";
+import { ChevronRight, CreditCard, Wallet, Calendar, Coins, Info, PlayCircle, Headphones, BarChart3, Building2, Power } from "lucide-react";
+import logo from "@/assets/whirlpool-logo.png";
 
 const menu = [
   { to: "/my-products", icon: Coins, label: "Le produit que vous avez acheté" },
@@ -27,9 +28,8 @@ export default function Profile() {
           <p className="text-xs text-muted-foreground">Numéro de téléphone</p>
           <p className="font-bold">{profile?.phone}</p>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Anchor className="w-5 h-5 text-primary" />
-          <span className="font-extrabold text-primary">Ocean<span className="text-accent">Profit</span></span>
+        <div className="flex items-center gap-2">
+          <img src={logo} alt="Whirlpool" className="h-7 w-auto" />
         </div>
       </header>
 

@@ -9,9 +9,9 @@ import { formatMoney, getCountry } from "@/lib/countries";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const PRESETS = [5000, 8000, 12500, 15000, 20000];
+const PRESETS = [2500, 5000, 8000, 12500, 15000, 20000];
 const RULES = [
-  "Le dépôt minimum est de 500 XOF.",
+  "Le dépôt minimum est de 2 500 XOF.",
   "Paiement instantané et sécurisé via MoneyFusion.",
   "Votre solde est crédité automatiquement après confirmation du paiement.",
   "Conservez votre référence de transaction.",
@@ -22,11 +22,11 @@ const RULES = [
 export default function Deposit() {
   const { profile } = useAuth();
   const cur = getCountry(profile?.country).currency;
-  const [amount, setAmount] = useState<number>(5000);
+  const [amount, setAmount] = useState<number>(2500);
   const [busy, setBusy] = useState(false);
 
   const submit = async () => {
-    if (!profile || amount < 500) return toast.error("Minimum 500 FCFA");
+    if (!profile || amount < 2500) return toast.error("Minimum 2 500 FCFA");
     setBusy(true);
     const { data, error } = await supabase.functions.invoke("moneyfusion-create-payment", {
       body: { amount },
