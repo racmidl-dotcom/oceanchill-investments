@@ -30,6 +30,7 @@ const AdminUserProducts = lazy(() => import("./pages/admin/AdminUserProducts"));
 const AdminDeposits = lazy(() => import("./pages/admin/AdminDeposits"));
 const AdminWithdrawals = lazy(() => import("./pages/admin/AdminWithdrawals"));
 const AdminReferrals = lazy(() => import("./pages/admin/AdminReferrals"));
+const AdminPromoters = lazy(() => import("./pages/admin/AdminPromoters"));
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const App = () => (
                 <Route path="deposits" element={<AdminDeposits />} />
                 <Route path="withdrawals" element={<AdminWithdrawals />} />
                 <Route path="referrals" element={<AdminReferrals />} />
+                <Route path="promoters" element={<AdminPromoters />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

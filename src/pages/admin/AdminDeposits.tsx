@@ -20,9 +20,35 @@ export default function AdminDeposits() {
     if (error) toast.error(error.message); else load();
   };
 
+  const totalConfirmed = rows.filter(r => r.status === "confirmed").reduce((s, r) => s + Number(r.amount), 0);
+  const totalPending = rows.filter(r => r.status === "pending").reduce((s, r) => s + Number(r.amount), 0);
+  const totalRejected = rows.filter(r => r.status === "rejected").reduce((s, r) => s + Number(r.amount), 0);
+  const countConfirmed = rows.filter(r => r.status === "confirmed").length;
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Dépôts ({rows.length})</h1>
+
+      <div className="grid grid-cols-4 gap-4 mb-4">
+        <div className="bg-card p-4 rounded-xl">
+          <p className="text-xs text-muted-foreground">Total confirmé</p>
+          <p className="text-xl font-bold text-success">{formatMoney(totalConfirmed)}</p>
+          <p className="text-[10px] text-muted-foreground mt-1">{countConfirmed} dépôt(s)</p>
+        </div>
+        <div className="bg-card p-4 rounded-xl">
+          <p className="text-xs text-muted-foreground">En attente</p>
+          <p className="text-xl font-bold text-warning">{formatMoney(totalPending)}</p>
+        </div>
+        <div className="bg-card p-4 rounded-xl">
+          <p className="text-xs text-muted-foreground">Rejeté</p>
+          <p className="text-xl font-bold text-destructive">{formatMoney(totalRejected)}</p>
+        </div>
+        <div className="bg-card p-4 rounded-xl">
+          <p className="text-xs text-muted-foreground">Total transactions</p>
+          <p className="text-xl font-bold">{rows.length}</p>
+        </div>
+      </div>
+
       <div className="bg-card rounded-xl overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted text-left"><tr>
