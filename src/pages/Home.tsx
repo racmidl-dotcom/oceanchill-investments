@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CreditCard, Wallet, Headphones, Volume2 } from "lucide-react";
+import { CreditCard, Wallet, Headphones, Volume2, Send, X } from "lucide-react";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { StatCard } from "@/components/features/StatCard";
 import { useAuth } from "@/context/AuthContext";
 import { formatMoney, getCountry } from "@/lib/countries";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+const TELEGRAM_URL = "https://t.me/whirlpool_officiel";
 
 const actions = [
   { to: "/deposit", icon: CreditCard, label: "Paiement" },
@@ -18,12 +21,24 @@ export default function Home() {
   const { profile } = useAuth();
   const cur = getCountry(profile?.country).currency;
   const [annonces, setAnnonces] = useState<string[]>([]);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     supabase.from("announcements").select("message").eq("active", true).then(({ data }) => {
       setAnnonces((data ?? []).map((d: any) => d.message));
     });
+    // Popup d'accueil : montre une fois par session
+    const seen = sessionStorage.getItem("whirlpool_welcome_seen");
+    if (!seen) {
+      const t = setTimeout(() => setShowWelcome(true), 600);
+      return () => clearTimeout(t);
+    }
   }, []);
+
+  const closeWelcome = () => {
+    sessionStorage.setItem("whirlpool_welcome_seen", "1");
+    setShowWelcome(false);
+  };
 
   return (
     <PageWrapper>
