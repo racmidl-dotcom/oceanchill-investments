@@ -50,8 +50,8 @@ export default function Home() {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/85 to-primary/40 flex flex-col justify-center px-6">
-            <h2 className="text-white text-4xl font-black tracking-wide">Réfrigérateurs</h2>
-            <p className="text-white/90 text-sm mt-1">Investissez · Gagnez · Chaque jour</p>
+            <h2 className="text-white text-4xl font-black tracking-wide">Whirlpool</h2>
+            <p className="text-white/90 text-sm mt-1">Excellence européenne · Depuis 1911</p>
             <ul className="text-white text-xs mt-3 space-y-0.5">
               <li>● Frigo combiné</li>
               <li>● Side-by-side</li>
@@ -65,7 +65,7 @@ export default function Home() {
           <Volume2 className="w-5 h-5 text-accent shrink-0" />
           <div className="flex-1 overflow-hidden whitespace-nowrap">
             <div className="ticker-track inline-block">
-              {annonces.length ? annonces.join(" · ") : "Bienvenue sur OceanProfit"}
+              {annonces.length ? annonces.join(" · ") : "Whirlpool — Leader européen de l'électroménager depuis 1911"}
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function Home() {
         {/* Facts */}
         <section className="text-center pt-2">
           <div className="inline-block border-2 border-primary rounded-md px-5 py-1 text-primary font-semibold text-sm">
-            Facts About OceanProfit
+            À propos de Whirlpool
           </div>
           <div className="grid grid-cols-3 gap-2 mt-5">
             {[

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
-import { Anchor, Eye, EyeOff, Check } from "lucide-react";
+import { Eye, EyeOff, Check } from "lucide-react";
+import logo from "@/assets/whirlpool-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { phoneToEmail, COUNTRIES, CountryCode } from "@/lib/countries";
 import { Button } from "@/components/ui/button";
@@ -49,10 +50,7 @@ export default function Register() {
   return (
     <div className="app-shell flex flex-col items-center px-6 pt-12 pb-10">
       <div className="flex flex-col items-center gap-2 mb-8">
-        <Anchor className="w-12 h-12 text-primary" strokeWidth={2} />
-        <h1 className="text-2xl font-extrabold text-primary">
-          Ocean<span className="text-accent">Profit</span>
-        </h1>
+        <img src={logo} alt="Whirlpool" className="h-12 w-auto" />
       </div>
 
       <form onSubmit={handleSubmit} className="w-full space-y-4">
