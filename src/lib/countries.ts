@@ -23,7 +23,7 @@ export const COUNTRIES: Country[] = [
 export const getCountry = (code?: string | null): Country =>
   COUNTRIES.find((c) => c.code === code) ?? COUNTRIES[0];
 
-export const formatMoney = (amount: number, currency: "XOF" | "XAF" = "XOF") =>
+export const formatMoney = (amount: number, currency: "XOF" | "XAF" | "CDF" = "XOF") =>
   `${currency} ${Math.round(amount).toLocaleString("fr-FR")}`;
 
 export const phoneToEmail = (phone: string) =>
