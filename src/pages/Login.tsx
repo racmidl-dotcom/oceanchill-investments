@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Anchor, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import logo from "@/assets/whirlpool-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { phoneToEmail, COUNTRIES } from "@/lib/countries";
 import { Button } from "@/components/ui/button";
@@ -30,11 +31,8 @@ export default function Login() {
   return (
     <div className="app-shell flex flex-col items-center px-6 pt-16">
       <div className="flex flex-col items-center gap-2 mb-10">
-        <Anchor className="w-14 h-14 text-primary" strokeWidth={2} />
-        <h1 className="text-3xl font-extrabold text-primary">
-          Ocean<span className="text-accent">Profit</span>
-        </h1>
-        <p className="text-sm text-muted-foreground">Investissez dans la vente de réfrigérateurs</p>
+        <img src={logo} alt="Whirlpool" className="h-14 w-auto" />
+        <p className="text-sm text-muted-foreground mt-2">Investissez dans nos réfrigérateurs</p>
       </div>
 
       <form onSubmit={handleSubmit} className="w-full space-y-4">

@@ -9,15 +9,16 @@ export default function About() {
         <div className="rounded-xl overflow-hidden h-44">
           <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=70" loading="lazy" alt="" className="w-full h-full object-cover" />
         </div>
-        <h2 className="text-xl font-bold text-primary">OceanProfit</h2>
+        <h2 className="text-xl font-bold text-primary">Whirlpool</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          OceanProfit est une plateforme d'investissement participatif spécialisée dans la vente de réfrigérateurs en Afrique de l'Ouest. Nos partenariats avec les plus grands distributeurs nous permettent de redistribuer les bénéfices à nos investisseurs sous forme de revenus quotidiens.
+          Whirlpool est une multinationale européenne fondée en 1911, leader mondial de l'électroménager et notamment de la réfrigération. Notre programme d'investissement participatif vous permet de partager nos bénéfices issus de la distribution de nos réfrigérateurs en Afrique, sous forme de revenus quotidiens.
         </p>
 
         <div className="bg-secondary rounded-xl p-4 space-y-2 text-sm">
-          <p><strong>Date de création :</strong> 2024</p>
-          <p><strong>Mission :</strong> Démocratiser l'investissement dans l'électroménager.</p>
-          <p><strong>Valeurs :</strong> Transparence, fiabilité, rentabilité.</p>
+          <p><strong>Fondée en :</strong> 1911</p>
+          <p><strong>Siège :</strong> Europe</p>
+          <p><strong>Mission :</strong> Innovation et excellence dans l'électroménager.</p>
+          <p><strong>Valeurs :</strong> Qualité, fiabilité, durabilité.</p>
           <p><strong>Pays couverts :</strong></p>
           <div className="flex gap-3 pt-1">
             {COUNTRIES.map(c => <span key={c.code} className="text-2xl" title={c.name}>{c.flag}</span>)}
