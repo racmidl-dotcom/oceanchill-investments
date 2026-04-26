@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { History as HistoryIcon } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BackHeader } from "@/components/layout/BackHeader";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,9 @@ import { toast } from "sonner";
 
 const PRESETS = [5000, 8000, 12500, 15000, 20000];
 const RULES = [
-  "Le dépôt minimum est de 5 000 XOF.",
-  "Vérifiez le canal actif avant de procéder.",
-  "Le crédit s'effectue après confirmation par notre équipe (max 30 min).",
+  "Le dépôt minimum est de 500 XOF.",
+  "Paiement instantané et sécurisé via MoneyFusion.",
+  "Votre solde est crédité automatiquement après confirmation du paiement.",
   "Conservez votre référence de transaction.",
   "Ne partagez jamais vos identifiants.",
   "En cas de problème, contactez le service client.",
@@ -22,23 +22,27 @@ const RULES = [
 export default function Deposit() {
   const { profile } = useAuth();
   const cur = getCountry(profile?.country).currency;
-  const nav = useNavigate();
   const [amount, setAmount] = useState<number>(5000);
-  const [channel, setChannel] = useState("channel_1");
   const [busy, setBusy] = useState(false);
 
   const submit = async () => {
-    if (!profile || amount < 5000) return toast.error("Minimum 5 000");
+    if (!profile || amount < 500) return toast.error("Minimum 500 FCFA");
     setBusy(true);
-    const { error } = await supabase.from("deposits").insert({ user_id: profile.id, amount, channel, reference: `DEP-${Date.now()}` });
+    const { data, error } = await supabase.functions.invoke("moneyfusion-create-payment", {
+      body: { amount },
+    });
     setBusy(false);
-    if (error) toast.error(error.message);
-    else { toast.success("Demande de dépôt envoyée"); nav("/history"); }
+    if (error || !data?.url) {
+      toast.error(error?.message || data?.error || "Erreur de paiement");
+      return;
+    }
+    // Redirige vers la page de paiement MoneyFusion
+    window.location.href = data.url;
   };
 
   return (
     <div className="app-shell">
-      <BackHeader title="Dépôt en ligne" right={<Link to="/history"><HistoryIcon className="w-5 h-5" /></Link>} />
+      <BackHeader title="Recharger via MoneyFusion" right={<Link to="/history"><HistoryIcon className="w-5 h-5" /></Link>} />
       <div className="px-4 mt-4 space-y-4">
         <div className="rounded-xl overflow-hidden relative h-32">
           <img src="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&q=60" loading="lazy" alt="" className="w-full h-full object-cover" />
@@ -51,7 +55,7 @@ export default function Deposit() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold mb-2">Montant</p>
+          <p className="text-sm font-semibold mb-2">Montant à recharger</p>
           <div className="grid grid-cols-3 gap-2 mb-3">
             {PRESETS.map(p => (
               <button key={p} onClick={() => setAmount(p)} className={`py-2 rounded-lg border text-sm font-medium ${amount === p ? "bg-accent text-accent-foreground border-accent" : "bg-secondary border-border"}`}>
@@ -62,16 +66,16 @@ export default function Deposit() {
           <Input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} className="h-12" />
         </div>
 
-        <div>
-          <p className="text-sm font-semibold mb-2">Canal de dépôt</p>
-          <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => setChannel("channel_1")} className={`py-3 rounded-lg border text-sm font-medium ${channel === "channel_1" ? "bg-primary text-primary-foreground border-primary" : "bg-secondary border-border"}`}>Canal 1 (actif)</button>
-            <button disabled className="py-3 rounded-lg border border-border text-sm bg-muted text-muted-foreground">Canal 2 (inactif)</button>
+        <div className="bg-secondary rounded-xl p-4 flex items-center gap-3">
+          <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold">MF</div>
+          <div>
+            <p className="font-semibold text-sm">MoneyFusion</p>
+            <p className="text-xs text-muted-foreground">Orange, MTN, Moov, Wave, Airtel...</p>
           </div>
         </div>
 
         <Button onClick={submit} disabled={busy} className="w-full h-12 rounded-pill bg-stat hover:bg-stat/90 text-stat-foreground font-semibold">
-          {busy ? "..." : "Déposez maintenant"}
+          {busy ? "Redirection..." : "Payer maintenant"}
         </Button>
 
         <ol className="text-xs text-muted-foreground space-y-1 list-decimal pl-4 pt-2">
