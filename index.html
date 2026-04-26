@@ -1,26 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+    <title>OceanProfit — Investissez dans la vente de réfrigérateurs</title>
+    <meta name="description" content="OceanProfit, plateforme d'investissement participatif dans la vente de réfrigérateurs en Afrique de l'Ouest. Revenus quotidiens, parrainage." />
+    <meta name="author" content="OceanProfit" />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=860&q=70" fetchpriority="high" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Lovable App" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:title" content="OceanProfit" />
+    <meta property="og:description" content="Investissez dans la vente de réfrigérateurs et touchez des revenus quotidiens." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
 
+    <style>
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Inter,system-ui,sans-serif;background:#fff;color:#1a1a2e}
+      #root{min-height:100vh}
+      #initial-loader{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:#fff;z-index:9999}
+      .spinner{width:36px;height:36px;border:3px solid #e5e7eb;border-top-color:#1a3a6b;border-radius:50%;animation:spin .7s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
   <body>
     <div id="root"></div>
+    <div id="initial-loader"><div class="spinner"></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
