@@ -8,7 +8,7 @@ import { formatMoney, getCountry } from "@/lib/countries";
 type Row = { id: string; amount: number; status: string; created_at: string; ref?: string; extra?: string };
 const STATUS_COLOR: Record<string, string> = { pending: "text-warning", approved: "text-success", confirmed: "text-success", rejected: "text-destructive", active: "text-success" };
 
-const List = ({ rows, cur }: { rows: Row[]; cur: "XOF" | "XAF" }) => (
+const List = ({ rows, cur }: { rows: Row[]; cur: "XOF" | "XAF" | "CDF" }) => (
   <div className="space-y-2">
     {rows.length === 0 && <p className="text-center text-sm text-muted-foreground py-8">Aucune entrée</p>}
     {rows.map(r => (
