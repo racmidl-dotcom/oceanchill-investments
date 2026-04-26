@@ -1,5 +1,6 @@
 import { BackHeader } from "@/components/layout/BackHeader";
 import { ChevronRight, Send } from "lucide-react";
+import logo from "@/assets/whirlpool-logo.png";
 
 const LINKS = [
   { label: "Service client", href: "https://t.me/" },
@@ -22,7 +23,7 @@ export default function Support() {
         <div className="rounded-xl overflow-hidden h-32 relative">
           <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=60" alt="" loading="lazy" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-primary/80 flex items-center justify-center">
-            <span className="text-white text-2xl font-extrabold">Ocean<span className="text-accent">Profit</span></span>
+            <img src={logo} alt="Whirlpool" className="h-10 w-auto brightness-0 invert" />
           </div>
         </div>
 

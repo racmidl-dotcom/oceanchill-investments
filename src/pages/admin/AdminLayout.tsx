@@ -1,11 +1,12 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Users, Package, Wallet, CreditCard, Network, Refrigerator, ArrowLeft } from "lucide-react";
+import { Users, Package, Wallet, CreditCard, Network, Refrigerator, ArrowLeft, Star } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 const items = [
   { to: "/admin/users", icon: Users, label: "Utilisateurs" },
   { to: "/admin/products", icon: Package, label: "Produits" },
   { to: "/admin/user-products", icon: Refrigerator, label: "Investissements" },
+  { to: "/admin/promoters", icon: Star, label: "Promoteurs" },
   { to: "/admin/deposits", icon: CreditCard, label: "Dépôts" },
   { to: "/admin/withdrawals", icon: Wallet, label: "Retraits" },
   { to: "/admin/referrals", icon: Network, label: "Parrainages" },
@@ -18,7 +19,7 @@ export default function AdminLayout() {
     <div className="min-h-screen flex bg-secondary">
       <aside className="w-56 bg-primary text-primary-foreground flex flex-col">
         <div className="p-5 border-b border-white/10">
-          <h2 className="font-extrabold text-lg">Ocean<span className="text-accent">Profit</span></h2>
+          <h2 className="font-extrabold text-lg">Whirl<span className="text-accent">pool</span></h2>
           <p className="text-xs opacity-70">Administration</p>
         </div>
         <nav className="flex-1 p-2 space-y-1">
