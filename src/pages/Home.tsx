@@ -110,6 +110,52 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      {/* Popup d'accueil Whirlpool */}
+      <Dialog open={showWelcome} onOpenChange={(o) => !o && closeWelcome()}>
+        <DialogContent className="max-w-sm p-0 overflow-hidden border-0">
+          <div className="relative bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-6 text-center">
+            <button
+              onClick={closeWelcome}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition"
+              aria-label="Fermer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <div className="text-3xl font-black tracking-wide mb-1">Whirlpool</div>
+            <p className="text-xs opacity-80">Excellence européenne · Depuis 1911</p>
+          </div>
+          <div className="p-5 space-y-3">
+            <h3 className="font-bold text-lg text-center">Bienvenue, investisseur !</h3>
+            <p className="text-sm text-muted-foreground text-center leading-relaxed">
+              Whirlpool est le leader européen de l'électroménager. Investissez dans nos
+              réfrigérateurs et générez des revenus quotidiens fiables et sécurisés.
+            </p>
+            <ul className="text-xs space-y-1.5 bg-secondary rounded-lg p-3">
+              <li>✓ Revenus quotidiens automatiques</li>
+              <li>✓ Paiements sécurisés via MoneyFusion</li>
+              <li>✓ Programme de parrainage 3 niveaux</li>
+              <li>✓ Support client 7j/7</li>
+            </ul>
+            <a
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+              onClick={closeWelcome}
+              className="w-full flex items-center justify-center gap-2 h-12 rounded-pill bg-[#229ED9] hover:bg-[#1c8ec3] text-white font-semibold transition"
+            >
+              <Send className="w-4 h-4" />
+              Rejoindre la chaîne Telegram officielle
+            </a>
+            <button
+              onClick={closeWelcome}
+              className="w-full text-xs text-muted-foreground hover:text-foreground transition py-1"
+            >
+              Plus tard
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageWrapper>
   );
 }
