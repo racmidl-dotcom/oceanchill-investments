@@ -232,6 +232,7 @@ export type Database = {
           country: string
           created_at: string
           id: string
+          is_promoter: boolean
           phone: string
           ref_code: string
           referred_by: string | null
@@ -244,6 +245,7 @@ export type Database = {
           country?: string
           created_at?: string
           id: string
+          is_promoter?: boolean
           phone: string
           ref_code: string
           referred_by?: string | null
@@ -256,6 +258,7 @@ export type Database = {
           country?: string
           created_at?: string
           id?: string
+          is_promoter?: boolean
           phone?: string
           ref_code?: string
           referred_by?: string | null
