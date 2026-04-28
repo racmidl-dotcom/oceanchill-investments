@@ -1,9 +1,9 @@
-import { Refrigerator, Flower2, Users, User } from "lucide-react";
+import { Home, Refrigerator, Users, User } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const items = [
-  { to: "/products", label: "Produit", icon: Refrigerator },
-  { to: "/my-products", label: "Mon produit", icon: Flower2 },
+  { to: "/home", label: "Produit", icon: Home },
+  { to: "/my-products", label: "Mon produit", icon: Refrigerator },
   { to: "/team", label: "Mon équipe", icon: Users },
   { to: "/profile", label: "Le mien", icon: User },
 ];
