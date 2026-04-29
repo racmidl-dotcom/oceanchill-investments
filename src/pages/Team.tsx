@@ -50,24 +50,24 @@ export default function Team() {
               <p className="font-bold tracking-wider">{profile?.ref_code ?? "------"}</p>
               <p className="text-xs text-muted-foreground">Code d'invitation</p>
             </div>
-            <Button onClick={() => copy(profile?.ref_code ?? "")} className="bg-stat hover:bg-stat/90 text-stat-foreground rounded-md h-9">Copie</Button>
+            <Button onClick={() => copy(profile?.ref_code ?? "")} className="bg-panel-dark hover:bg-panel text-panel-foreground rounded-sm h-9">Copie</Button>
           </div>
           <div className="flex items-center p-3">
             <div className="flex-1 min-w-0">
               <p className="font-bold text-sm truncate">{link}</p>
               <p className="text-xs text-muted-foreground">Lien d'invitation</p>
             </div>
-            <Button onClick={() => copy(link)} className="bg-stat hover:bg-stat/90 text-stat-foreground rounded-md h-9 ml-2"><Copy className="w-3 h-3 mr-1" />Copie</Button>
+            <Button onClick={() => copy(link)} className="bg-panel-dark hover:bg-panel text-panel-foreground rounded-sm h-9 ml-2"><Copy className="w-3 h-3 mr-1" />Copie</Button>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-stat text-stat-foreground rounded-xl p-4 relative">
+          <div className="bg-panel text-panel-foreground rounded-md p-4 relative">
             <p className="text-2xl font-bold">{stats.teamSize}</p>
             <p className="text-xs opacity-80 mt-1">Taille de l'équipe</p>
             <span className="absolute right-3 top-3 opacity-60">»</span>
           </div>
-          <div className="bg-stat text-stat-foreground rounded-xl p-4 relative">
+          <div className="bg-panel text-panel-foreground rounded-md p-4 relative">
             <p className="text-xl font-bold">{formatMoney(stats.totalRev, cur)}</p>
             <p className="text-xs opacity-80 mt-1">Revenu total</p>
             <span className="absolute right-3 top-3 opacity-60">»</span>
