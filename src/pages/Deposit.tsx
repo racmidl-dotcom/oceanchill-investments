@@ -44,37 +44,36 @@ export default function Deposit() {
     <div className="app-shell">
       <BackHeader title="Recharger via MoneyFusion" right={<Link to="/history"><HistoryIcon className="w-5 h-5" /></Link>} />
       <div className="px-4 mt-4 space-y-4">
-        <div className="rounded-xl overflow-hidden relative h-32">
-          <img src="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&q=60" loading="lazy" alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-primary/70 flex items-center justify-center text-white">
+        <div className="rounded-md overflow-hidden relative h-32 bg-panel">
+          <div className="absolute inset-0 flex items-center justify-center text-panel-foreground">
             <div className="text-center">
-              <p className="text-xs opacity-80">Solde actuel</p>
-              <p className="text-2xl font-bold">{formatMoney(profile?.balance ?? 0, cur)}</p>
+              <p className="text-xs opacity-80 font-serif">Solde actuel</p>
+              <p className="text-2xl font-serif font-bold">{formatMoney(profile?.balance ?? 0, cur)}</p>
             </div>
           </div>
         </div>
 
         <div>
-          <p className="text-sm font-semibold mb-2">Montant à recharger</p>
+          <p className="text-sm font-serif font-semibold mb-2">Montant à recharger</p>
           <div className="grid grid-cols-3 gap-2 mb-3">
             {PRESETS.map(p => (
-              <button key={p} onClick={() => setAmount(p)} className={`py-2 rounded-lg border text-sm font-medium ${amount === p ? "bg-accent text-accent-foreground border-accent" : "bg-secondary border-border"}`}>
+              <button key={p} onClick={() => setAmount(p)} className={`py-2 rounded-sm border text-sm font-medium transition ${amount === p ? "bg-panel-dark text-panel-foreground border-panel-dark" : "bg-card border-border hover:border-panel"}`}>
                 {p.toLocaleString("fr-FR")}
               </button>
             ))}
           </div>
-          <Input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} className="h-12" />
+          <Input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} className="h-12 bg-card" />
         </div>
 
-        <div className="bg-secondary rounded-xl p-4 flex items-center gap-3">
-          <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold">MF</div>
+        <div className="bg-card border border-border/50 rounded-md p-4 flex items-center gap-3">
+          <div className="w-12 h-12 rounded-sm bg-panel text-panel-foreground flex items-center justify-center font-bold">MF</div>
           <div>
-            <p className="font-semibold text-sm">MoneyFusion</p>
+            <p className="font-serif font-semibold text-sm">MoneyFusion</p>
             <p className="text-xs text-muted-foreground">Orange, MTN, Moov, Wave, Airtel...</p>
           </div>
         </div>
 
-        <Button onClick={submit} disabled={busy} className="w-full h-12 rounded-pill bg-stat hover:bg-stat/90 text-stat-foreground font-semibold">
+        <Button onClick={submit} disabled={busy} className="w-full h-12 rounded-sm bg-panel-dark hover:bg-panel text-panel-foreground font-serif font-semibold tracking-widest uppercase text-sm">
           {busy ? "Redirection..." : "Payer maintenant"}
         </Button>
 
