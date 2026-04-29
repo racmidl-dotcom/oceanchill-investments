@@ -28,7 +28,7 @@ export default function Support() {
         </div>
 
         <div className="flex justify-center">
-          <span className="bg-stat text-stat-foreground rounded-full px-4 py-1 text-sm font-medium">9:00 — 20:00</span>
+          <span className="bg-panel text-panel-foreground rounded-full px-4 py-1 text-sm font-medium">9:00 — 20:00</span>
         </div>
 
         <div className="bg-secondary rounded-xl divide-y divide-border">
