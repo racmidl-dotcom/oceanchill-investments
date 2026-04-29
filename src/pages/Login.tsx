@@ -32,18 +32,18 @@ export default function Login() {
     <div className="app-shell flex flex-col items-center px-6 pt-16">
       <div className="flex flex-col items-center gap-2 mb-10">
         <img src={logo} alt="Whirlpool" className="h-14 w-auto" />
-        <p className="text-sm text-muted-foreground mt-2">Investissez dans nos réfrigérateurs</p>
+        <p className="text-sm text-muted-foreground mt-2 font-serif italic">Investissez dans nos réfrigérateurs</p>
       </div>
 
       <form onSubmit={handleSubmit} className="w-full space-y-4">
         <div className="flex gap-2">
-          <select value={dial} onChange={(e) => setDial(e.target.value)} className="bg-secondary rounded-lg px-3 text-sm font-medium">
+          <select value={dial} onChange={(e) => setDial(e.target.value)} className="bg-card border border-border rounded-sm px-3 text-sm font-medium">
             {COUNTRIES.map(c => <option key={c.code} value={c.dial}>{c.flag} {c.dial}</option>)}
           </select>
-          <Input type="tel" placeholder="Numéro de téléphone" value={phone} onChange={(e) => setPhone(e.target.value)} required className="flex-1 h-12" />
+          <Input type="tel" placeholder="Numéro de téléphone" value={phone} onChange={(e) => setPhone(e.target.value)} required className="flex-1 h-12 bg-card" />
         </div>
         <div className="relative">
-          <Input type={show ? "text" : "password"} placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12 pr-10" />
+          <Input type={show ? "text" : "password"} placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12 pr-10 bg-card" />
           <button type="button" onClick={() => setShow(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {show ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
@@ -51,12 +51,12 @@ export default function Login() {
 
         {err && <p className="text-sm text-destructive text-center">{err}</p>}
 
-        <Button type="submit" disabled={loading} className="w-full h-12 rounded-pill bg-stat hover:bg-stat/90 text-stat-foreground font-semibold">
+        <Button type="submit" disabled={loading} className="w-full h-12 rounded-sm bg-panel-dark hover:bg-panel text-panel-foreground font-serif font-semibold tracking-widest uppercase text-sm">
           {loading ? "Connexion..." : "Se connecter"}
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground pt-3">
-          Pas encore de compte ? <Link to="/register" className="text-accent font-semibold">Créer un compte</Link>
+        <p className="text-center text-sm text-muted-foreground pt-3 font-serif">
+          Pas encore de compte ? <Link to="/register" className="text-panel-dark font-semibold underline">Créer un compte</Link>
         </p>
       </form>
     </div>
