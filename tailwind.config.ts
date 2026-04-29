@@ -7,7 +7,10 @@ export default {
   theme: {
     container: { center: true, padding: "1rem", screens: { "2xl": "1400px" } },
     extend: {
-      fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        serif: ["'Cormorant Garamond'", "'Times New Roman'", "serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -22,6 +25,7 @@ export default {
         popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
         stat: { DEFAULT: "hsl(var(--stat))", foreground: "hsl(var(--stat-foreground))" },
+        panel: { DEFAULT: "hsl(var(--panel))", foreground: "hsl(var(--panel-foreground))", dark: "hsl(var(--panel-dark))" },
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
         sidebar: {

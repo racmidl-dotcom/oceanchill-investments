@@ -35,16 +35,16 @@ export default function BankAccount() {
       <BackHeader title="Compte bancaire" />
       <div className="px-4 mt-6 space-y-4">
         <div>
-          <label className="text-sm font-semibold mb-1 block">Opérateur</label>
-          <select value={operator} onChange={(e) => setOperator(e.target.value)} className="w-full bg-secondary rounded-lg h-12 px-3">
+          <label className="text-sm font-serif font-semibold mb-1 block">Opérateur</label>
+          <select value={operator} onChange={(e) => setOperator(e.target.value)} className="w-full bg-card border border-border rounded-sm h-12 px-3">
             {c.operators.map(o => <option key={o}>{o}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-sm font-semibold mb-1 block">Numéro de téléphone</label>
-          <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={c.dial + " XX XX XX XX"} className="h-12" />
+          <label className="text-sm font-serif font-semibold mb-1 block">Numéro de téléphone</label>
+          <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={c.dial + " XX XX XX XX"} className="h-12 bg-card" />
         </div>
-        <Button onClick={save} disabled={busy} className="w-full h-12 rounded-pill bg-stat hover:bg-stat/90 text-stat-foreground font-semibold">
+        <Button onClick={save} disabled={busy} className="w-full h-12 rounded-sm bg-panel-dark hover:bg-panel text-panel-foreground font-serif font-semibold tracking-widest uppercase text-sm">
           {busy ? "..." : "Enregistrer"}
         </Button>
       </div>

@@ -22,13 +22,13 @@ export default function Support() {
       <div className="px-4 mt-4 space-y-4">
         <div className="rounded-xl overflow-hidden h-32 relative">
           <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=60" alt="" loading="lazy" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-primary/80 flex items-center justify-center">
+          <div className="absolute inset-0 bg-panel-dark/85 flex items-center justify-center">
             <img src={logo} alt="Whirlpool" className="h-10 w-auto brightness-0 invert" />
           </div>
         </div>
 
         <div className="flex justify-center">
-          <span className="bg-stat text-stat-foreground rounded-full px-4 py-1 text-sm font-medium">9:00 — 20:00</span>
+          <span className="bg-panel text-panel-foreground rounded-full px-4 py-1 text-sm font-medium">9:00 — 20:00</span>
         </div>
 
         <div className="bg-secondary rounded-xl divide-y divide-border">

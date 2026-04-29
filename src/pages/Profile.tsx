@@ -1,84 +1,93 @@
 import { Link, useNavigate } from "react-router-dom";
 import { PageWrapper } from "@/components/layout/PageWrapper";
+import { AppHeader } from "@/components/layout/AppHeader";
 import { useAuth } from "@/context/AuthContext";
 import { formatMoney, getCountry } from "@/lib/countries";
-import { ChevronRight, CreditCard, Wallet, Calendar, Coins, Info, PlayCircle, Headphones, BarChart3, Building2, Power } from "lucide-react";
-import logo from "@/assets/whirlpool-logo.png";
+import { ChevronRight, CreditCard, Wallet, FileText, Building2, Info, BookOpen, Headphones, BarChart3, Power } from "lucide-react";
 
-const menu = [
-  { to: "/my-products", icon: Coins, label: "Le produit que vous avez acheté" },
-  { to: "/about", icon: Info, label: "À propos de nous" },
-  { to: "/rules", icon: PlayCircle, label: "Règles de la plateforme" },
-  { to: "/support", icon: Headphones, label: "Service client" },
-  { to: "/history", icon: BarChart3, label: "Historique du compte" },
+const menu1 = [
+  { to: "/profile", icon: FileText, label: "Détails du compte" },
+  { to: "/history", icon: FileText, label: "Historique des recharges" },
+  { to: "/history", icon: FileText, label: "Registres de retrait" },
   { to: "/bank", icon: Building2, label: "Gestion de compte bancaire" },
+];
+
+const menu2 = [
+  { to: "/about", icon: Info, label: "À propos de nous" },
+  { to: "/rules", icon: BookOpen, label: "Règles de la plateforme" },
+  { to: "/my-products", icon: BarChart3, label: "Mon produit acheté" },
+  { to: "/support", icon: Headphones, label: "Service client" },
 ];
 
 export default function Profile() {
   const { profile, signOut, isAdmin } = useAuth();
   const nav = useNavigate();
   const cur = getCountry(profile?.country).currency;
-
   const handleLogout = async () => { await signOut(); nav("/login", { replace: true }); };
 
   return (
     <PageWrapper>
-      <header className="flex items-center justify-between px-4 pt-5 pb-3">
-        <div>
-          <p className="text-xs text-muted-foreground">Numéro de téléphone</p>
-          <p className="font-bold">{profile?.phone}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <img src={logo} alt="Whirlpool" className="h-7 w-auto" />
-        </div>
-      </header>
-
-      <div className="px-4 space-y-4">
-        <div className="bg-secondary rounded-xl p-4 grid grid-cols-3 gap-2">
-          <Link to="/deposit" className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-destructive flex items-center justify-center text-white"><CreditCard className="w-5 h-5" /></div>
-            <span className="text-[11px] font-medium text-center">Dépôt en ligne</span>
-          </Link>
-          <Link to="/withdraw" className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-destructive flex items-center justify-center text-white"><Wallet className="w-5 h-5" /></div>
-            <span className="text-[11px] font-medium text-center">Retirer de l'argent</span>
-          </Link>
-          <Link to="/bank" className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-destructive flex items-center justify-center text-white"><Calendar className="w-5 h-5" /></div>
-            <span className="text-[11px] font-medium text-center">Enregistrer</span>
-          </Link>
+      <div className="px-3 pt-3 space-y-4">
+        {/* Bandeau taupe header avec logo + infos compte */}
+        <div className="bg-panel text-panel-foreground rounded-md p-5">
+          <div className="flex justify-center mb-4">
+            <AppHeader />
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-center">
+            <div>
+              <p className="text-[11px] opacity-80 font-serif">Numéro de téléphone</p>
+              <p className="font-serif font-bold text-lg mt-1">{profile?.phone}</p>
+            </div>
+            <div>
+              <p className="text-[11px] opacity-80 font-serif">Solde du compte</p>
+              <p className="font-serif font-bold text-lg mt-1">{formatMoney(profile?.balance ?? 0, cur)}</p>
+            </div>
+          </div>
         </div>
 
+        {/* 2 boutons larges Recharger / Retrait */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-stat text-stat-foreground rounded-xl p-4">
-            <p className="text-lg font-bold">{formatMoney(profile?.balance ?? 0, cur)}</p>
-            <p className="text-xs opacity-80 mt-1">Solde du compte</p>
-          </div>
-          <div className="bg-stat text-stat-foreground rounded-xl p-4">
-            <p className="text-lg font-bold">{formatMoney(profile?.total_revenue ?? 0, cur)}</p>
-            <p className="text-xs opacity-80 mt-1">Revenu cumulé</p>
-          </div>
+          <Link to="/deposit" className="tile-panel flex-row gap-2 py-4">
+            <CreditCard className="w-5 h-5" strokeWidth={1.6} />
+            <span className="text-sm font-serif font-semibold">Recharger</span>
+          </Link>
+          <Link to="/withdraw" className="tile-panel flex-row gap-2 py-4">
+            <Wallet className="w-5 h-5" strokeWidth={1.6} />
+            <span className="text-sm font-serif font-semibold">Retrait</span>
+          </Link>
         </div>
 
-        <div className="bg-card rounded-xl border border-border divide-y divide-border">
-          {menu.map(({ to, icon: Icon, label }) => (
-            <Link key={to} to={to} className="flex items-center gap-3 p-4 hover:bg-muted transition">
-              <div className="w-9 h-9 rounded-full bg-stat text-stat-foreground flex items-center justify-center"><Icon className="w-4 h-4" /></div>
-              <span className="flex-1 text-sm">{label}</span>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+        {/* Bloc menu 1 — taupe avec items */}
+        <div className="bg-panel text-panel-foreground rounded-md overflow-hidden">
+          {menu1.map(({ to, icon: Icon, label }, i) => (
+            <Link key={i} to={to} className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-b border-white/10 last:border-0">
+              <Icon className="w-5 h-5 opacity-90" strokeWidth={1.5} />
+              <span className="flex-1 text-sm font-serif">{label}</span>
+              <ChevronRight className="w-5 h-5 opacity-80" />
+            </Link>
+          ))}
+        </div>
+
+        {/* Bloc menu 2 */}
+        <div className="bg-panel text-panel-foreground rounded-md overflow-hidden">
+          {menu2.map(({ to, icon: Icon, label }, i) => (
+            <Link key={i} to={to} className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-b border-white/10 last:border-0">
+              <Icon className="w-5 h-5 opacity-90" strokeWidth={1.5} />
+              <span className="flex-1 text-sm font-serif">{label}</span>
+              <ChevronRight className="w-5 h-5 opacity-80" />
             </Link>
           ))}
           {isAdmin && (
-            <Link to="/admin/users" className="flex items-center gap-3 p-4 hover:bg-muted transition">
-              <div className="w-9 h-9 rounded-full bg-accent text-accent-foreground flex items-center justify-center"><BarChart3 className="w-4 h-4" /></div>
-              <span className="flex-1 text-sm font-semibold text-accent">Panel administrateur</span>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+            <Link to="/admin/users" className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-t border-white/10">
+              <BarChart3 className="w-5 h-5" strokeWidth={1.5} />
+              <span className="flex-1 text-sm font-serif font-semibold">Panel administrateur</span>
+              <ChevronRight className="w-5 h-5 opacity-80" />
             </Link>
           )}
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 p-4 hover:bg-muted transition">
-            <div className="w-9 h-9 rounded-full bg-stat text-stat-foreground flex items-center justify-center"><Power className="w-4 h-4" /></div>
-            <span className="flex-1 text-sm text-left">Quittez l'application</span>
-            <ChevronRight className="w-5 h-5 text-muted-foreground" />
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-t border-white/10">
+            <Power className="w-5 h-5" strokeWidth={1.5} />
+            <span className="flex-1 text-sm font-serif text-left">Quittez l'application</span>
+            <ChevronRight className="w-5 h-5 opacity-80" />
           </button>
         </div>
       </div>

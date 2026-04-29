@@ -55,24 +55,24 @@ export default function Register() {
 
       <form onSubmit={handleSubmit} className="w-full space-y-4">
         <div>
-          <label className="text-xs text-muted-foreground mb-1 block">Pays</label>
-          <select value={country} onChange={(e) => setCountry(e.target.value as CountryCode)} className="w-full bg-secondary rounded-lg h-12 px-3 text-sm font-medium">
+          <label className="text-xs text-muted-foreground mb-1 block font-serif">Pays</label>
+          <select value={country} onChange={(e) => setCountry(e.target.value as CountryCode)} className="w-full bg-card border border-border rounded-sm h-12 px-3 text-sm font-medium">
             {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.flag} {c.name} ({c.dial})</option>)}
           </select>
         </div>
 
         <div className="flex gap-2">
-          <div className="bg-secondary rounded-lg h-12 px-3 flex items-center text-sm font-semibold">{dial}</div>
-          <Input type="tel" placeholder="Téléphone" value={phone} onChange={(e) => setPhone(e.target.value)} required className="flex-1 h-12" />
+          <div className="bg-card border border-border rounded-sm h-12 px-3 flex items-center text-sm font-semibold">{dial}</div>
+          <Input type="tel" placeholder="Téléphone" value={phone} onChange={(e) => setPhone(e.target.value)} required className="flex-1 h-12 bg-card" />
         </div>
 
         <div className="relative">
-          <Input type={show ? "text" : "password"} placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12 pr-10" />
+          <Input type={show ? "text" : "password"} placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12 pr-10 bg-card" />
           <button type="button" onClick={() => setShow(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {show ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         </div>
-        <Input type={show ? "text" : "password"} placeholder="Confirmer le mot de passe" value={confirm} onChange={(e) => setConfirm(e.target.value)} required className="h-12" />
+        <Input type={show ? "text" : "password"} placeholder="Confirmer le mot de passe" value={confirm} onChange={(e) => setConfirm(e.target.value)} required className="h-12 bg-card" />
 
         <div className="relative">
           <Input
@@ -80,19 +80,19 @@ export default function Register() {
             value={refCode}
             onChange={(e) => setRefCode(e.target.value.toUpperCase())}
             readOnly={!!refFromUrl}
-            className={`h-12 ${refFromUrl ? "pr-10 bg-secondary" : ""}`}
+            className={`h-12 bg-card ${refFromUrl ? "pr-10" : ""}`}
           />
           {refFromUrl && <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-success w-5 h-5" />}
         </div>
 
         {err && <p className="text-sm text-destructive text-center">{err}</p>}
 
-        <Button type="submit" disabled={loading} className="w-full h-12 rounded-pill bg-stat hover:bg-stat/90 text-stat-foreground font-semibold">
+        <Button type="submit" disabled={loading} className="w-full h-12 rounded-sm bg-panel-dark hover:bg-panel text-panel-foreground font-serif font-semibold tracking-widest uppercase text-sm">
           {loading ? "Création..." : "Créer un compte"}
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground pt-2">
-          Déjà inscrit ? <Link to="/login" className="text-accent font-semibold">Se connecter</Link>
+        <p className="text-center text-sm text-muted-foreground pt-2 font-serif">
+          Déjà inscrit ? <Link to="/login" className="text-panel-dark font-semibold underline">Se connecter</Link>
         </p>
       </form>
     </div>

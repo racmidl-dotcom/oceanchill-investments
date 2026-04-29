@@ -14,7 +14,7 @@ import { toast } from "sonner";
 export default function Products() {
   const { data, loading } = useProducts();
   const { profile, refetchProfile } = useAuth();
-  const { data: invs, reload } = useInvestments();
+  const { reload } = useInvestments();
   const cur = getCountry(profile?.country).currency;
   const [target, setTarget] = useState<Product | null>(null);
   const [busy, setBusy] = useState(false);
@@ -35,66 +35,45 @@ export default function Products() {
     else { toast.success(`${target.name} acheté !`); refetchProfile(); reload(); }
   };
 
-  const totalProducts = invs.length;
-  const totalProfit = invs.reduce((s, i) => s + Number(i.earned), 0);
-
   return (
     <PageWrapper>
-      <div className="relative h-44 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=60" alt="" loading="eager" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/50" />
-        <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-          <div className="bg-white/15 backdrop-blur rounded-lg p-3 w-32">
-            <div className="text-white text-xl font-bold">{totalProducts}</div>
-            <div className="text-white/80 text-[11px]">Total des produits</div>
-          </div>
-          <div className="bg-white/15 backdrop-blur rounded-lg p-3 w-32 mt-12">
-            <div className="text-white text-lg font-bold">{formatMoney(totalProfit, cur)}</div>
-            <div className="text-white/80 text-[11px]">Bénéfice du produit</div>
-          </div>
-        </div>
-        <h2 className="absolute bottom-3 left-4 text-white text-3xl font-black tracking-wider">RÉFRIGÉRATEURS</h2>
-      </div>
-
       <AppHeader />
-
-      <div className="px-3 space-y-3">
-        {loading && Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-40 w-full rounded-xl" />)}
+      <div className="px-3 grid grid-cols-2 gap-3 pb-4">
+        {loading && Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-72 w-full rounded-md" />)}
         {data.map(p => (
-          <article key={p.id} className="bg-secondary rounded-xl p-3 flex gap-3">
-            <img src={p.image_url ?? ""} alt={p.name} loading="lazy" decoding="async"
-                 className="w-32 h-32 rounded-lg object-cover bg-white shrink-0" />
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-accent font-bold text-lg">{p.name}</h3>
-                  <p className="text-xs"><span className="text-foreground">Prix: </span><span className="text-accent font-bold">{formatMoney(p.price, cur)}</span></p>
-                  <p className="text-xs"><span className="text-foreground">Validité: </span><span className="text-accent font-bold">{p.duration_days} jours</span></p>
-                  <p className="text-xs"><span className="text-foreground">Revenu/jour: </span><span className="text-accent font-bold">{formatMoney(p.daily_revenue, cur)}</span></p>
-                  <p className="text-xs"><span className="text-foreground">Total: </span><span className="text-accent font-bold">{formatMoney(p.total_revenue, cur)}</span></p>
-                </div>
-                <Button size="sm" onClick={() => setTarget(p)} className="rounded-pill bg-accent hover:bg-accent/90 text-accent-foreground h-8 px-4 text-xs font-semibold">Acheter</Button>
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-2">Après l'achat, le profit sera automatiquement crédité dans les 24 heures.</p>
+          <article key={p.id} className="luxury-card flex flex-col">
+            <h3 className="text-center py-2 font-serif font-semibold text-sm">{p.name}</h3>
+            <div className="aspect-square bg-secondary">
+              {p.image_url && <img src={p.image_url} alt={p.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />}
+            </div>
+            <div className="p-3 space-y-1 flex-1">
+              <p className="text-sm font-semibold text-destructive">{formatMoney(p.daily_revenue, cur)}</p>
+              <p className="text-[11px] text-muted-foreground -mt-1">Revenu quotidien</p>
+              <p className="text-sm font-semibold text-destructive pt-1">{formatMoney(p.total_revenue, cur)}</p>
+              <p className="text-[11px] text-muted-foreground -mt-1">Revenu total</p>
+              <p className="text-base font-serif font-semibold pt-2">{formatMoney(p.price, cur)}</p>
+            </div>
+            <div className="px-3 pb-3 flex justify-end">
+              <button onClick={() => setTarget(p)} className="btn-luxury">Acheter</button>
             </div>
           </article>
         ))}
       </div>
 
       <Dialog open={!!target} onOpenChange={(o) => !o && setTarget(null)}>
-        <DialogContent className="max-w-xs">
-          <DialogHeader><DialogTitle>Confirmer l'achat</DialogTitle></DialogHeader>
+        <DialogContent className="max-w-xs bg-card">
+          <DialogHeader><DialogTitle className="font-serif">Confirmer l'achat</DialogTitle></DialogHeader>
           {target && (
             <div className="space-y-1 text-sm">
               <p>Produit : <strong>{target.name}</strong></p>
-              <p>Prix : <strong className="text-accent">{formatMoney(target.price, cur)}</strong></p>
-              <p>Revenu quotidien : <strong className="text-accent">{formatMoney(target.daily_revenue, cur)}</strong></p>
+              <p>Prix : <strong className="text-panel-dark">{formatMoney(target.price, cur)}</strong></p>
+              <p>Revenu quotidien : <strong className="text-panel-dark">{formatMoney(target.daily_revenue, cur)}</strong></p>
               <p>Solde actuel : <strong>{formatMoney(profile?.balance ?? 0, cur)}</strong></p>
             </div>
           )}
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => setTarget(null)}>Annuler</Button>
-            <Button onClick={buy} disabled={busy} className="bg-accent hover:bg-accent/90 text-accent-foreground">{busy ? "..." : "Confirmer"}</Button>
+            <button onClick={buy} disabled={busy} className="btn-luxury">{busy ? "..." : "Confirmer"}</button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

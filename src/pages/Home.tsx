@@ -1,33 +1,30 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CreditCard, Wallet, Headphones, Volume2, Send, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { StatCard } from "@/components/features/StatCard";
 import { useAuth } from "@/context/AuthContext";
+import { useProducts } from "@/hooks/useProducts";
 import { formatMoney, getCountry } from "@/lib/countries";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { CreditCard, Banknote, Headphones } from "lucide-react";
 
 const TELEGRAM_URL = "https://t.me/whirlpool_officiel";
 
 const actions = [
-  { to: "/deposit", icon: CreditCard, label: "Paiement" },
-  { to: "/withdraw", icon: Wallet, label: "Retrait" },
+  { to: "/deposit", icon: CreditCard, label: "Recharger" },
+  { to: "/withdraw", icon: Banknote, label: "Retirer" },
   { to: "/support", icon: Headphones, label: "Service client" },
 ];
 
 export default function Home() {
   const { profile } = useAuth();
+  const { data: products, loading } = useProducts();
   const cur = getCountry(profile?.country).currency;
-  const [annonces, setAnnonces] = useState<string[]>([]);
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    supabase.from("announcements").select("message").eq("active", true).then(({ data }) => {
-      setAnnonces((data ?? []).map((d: any) => d.message));
-    });
-    // Popup d'accueil : montre une fois par session
     const seen = sessionStorage.getItem("whirlpool_welcome_seen");
     if (!seen) {
       const t = setTimeout(() => setShowWelcome(true), 600);
@@ -45,76 +42,63 @@ export default function Home() {
       <AppHeader />
 
       <div className="px-4 space-y-5">
-        {/* 3 actions */}
-        <div className="bg-secondary rounded-xl p-4 grid grid-cols-3 gap-2">
-          {actions.map(({ to, icon: Icon, label }) => (
-            <Link key={to} to={to} className="flex flex-col items-center gap-2 py-2 hover:opacity-80 transition">
-              <Icon className="w-7 h-7 text-foreground" strokeWidth={1.7} />
-              <span className="text-xs font-medium">{label}</span>
-            </Link>
-          ))}
-        </div>
-
-        {/* Hero */}
-        <div className="rounded-2xl overflow-hidden relative aspect-[4/3] bg-primary">
+        {/* Hero photo */}
+        <div className="rounded-md overflow-hidden aspect-[16/10]">
           <img
-            src="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=860&q=70"
-            alt="Réfrigérateurs OceanProfit"
+            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=70"
+            alt="Whirlpool — Showroom"
             loading="eager"
             fetchPriority="high"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/85 to-primary/40 flex flex-col justify-center px-6">
-            <h2 className="text-white text-4xl font-black tracking-wide">Whirlpool</h2>
-            <p className="text-white/90 text-sm mt-1">Excellence européenne · Depuis 1911</p>
-            <ul className="text-white text-xs mt-3 space-y-0.5">
-              <li>● Frigo combiné</li>
-              <li>● Side-by-side</li>
-              <li>● Mini-bar · Congélateur</li>
-            </ul>
-          </div>
         </div>
 
-        {/* Ticker */}
-        <div className="bg-primary text-primary-foreground rounded-lg px-3 py-2.5 flex items-center gap-3 overflow-hidden">
-          <Volume2 className="w-5 h-5 text-accent shrink-0" />
-          <div className="flex-1 overflow-hidden whitespace-nowrap">
-            <div className="ticker-track inline-block">
-              {annonces.length ? annonces.join(" · ") : "Whirlpool — Leader européen de l'électroménager depuis 1911"}
-            </div>
-          </div>
+        {/* 3 grandes tuiles taupe */}
+        <div className="grid grid-cols-3 gap-2">
+          {actions.map(({ to, icon: Icon, label }) => (
+            <Link key={to} to={to} className="tile-panel">
+              <Icon className="w-7 h-7" strokeWidth={1.5} />
+              <span className="text-[11px] font-serif font-medium tracking-wide text-center">{label}</span>
+            </Link>
+          ))}
         </div>
 
-        {/* Stats */}
+        {/* Solde / Revenu en bandeau discret */}
         <div className="grid grid-cols-2 gap-3">
-          <StatCard className="bg-primary text-primary-foreground" value={formatMoney(profile?.balance ?? 0, cur)} label="Solde du compte" />
-          <StatCard className="bg-primary text-primary-foreground" value={formatMoney(profile?.total_revenue ?? 0, cur)} label="Revenu cumulé" />
+          <div className="bg-card border border-border/40 rounded-md px-4 py-3">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Solde</p>
+            <p className="text-lg font-serif font-semibold text-panel-dark mt-0.5">{formatMoney(profile?.balance ?? 0, cur)}</p>
+          </div>
+          <div className="bg-card border border-border/40 rounded-md px-4 py-3">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Revenu cumulé</p>
+            <p className="text-lg font-serif font-semibold text-panel-dark mt-0.5">{formatMoney(profile?.total_revenue ?? 0, cur)}</p>
+          </div>
         </div>
 
-        {/* Facts */}
-        <section className="text-center pt-2">
-          <div className="inline-block border-2 border-primary rounded-md px-5 py-1 text-primary font-semibold text-sm">
-            À propos de Whirlpool
-          </div>
-          <div className="grid grid-cols-3 gap-2 mt-5">
-            {[
-              { n: "4", l: "Pays couverts" },
-              { n: "15 000+", l: "Membres actifs" },
-              { n: "99%", l: "Satisfaction client" },
-            ].map(f => (
-              <div key={f.l}>
-                <div className="text-2xl font-black text-primary">{f.n}</div>
-                <div className="text-[10px] text-muted-foreground mt-1">{f.l}</div>
-              </div>
+        {/* Grille de produits style boutique */}
+        {!loading && products.length > 0 && (
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            {products.slice(0, 4).map(p => (
+              <Link key={p.id} to="/products" className="luxury-card flex flex-col">
+                <div className="text-center py-2 font-serif font-semibold text-sm">{p.name}</div>
+                <div className="aspect-square bg-secondary">
+                  {p.image_url && <img src={p.image_url} alt={p.name} loading="lazy" className="w-full h-full object-cover" />}
+                </div>
+                <div className="p-3 space-y-0.5">
+                  <p className="text-xs"><span className="text-destructive font-semibold">{formatMoney(p.daily_revenue, cur)}</span></p>
+                  <p className="text-[10px] text-muted-foreground">Revenu quotidien</p>
+                  <p className="text-sm font-serif font-semibold mt-1">{formatMoney(p.price, cur)}</p>
+                </div>
+              </Link>
             ))}
           </div>
-        </section>
+        )}
       </div>
 
       {/* Popup d'accueil Whirlpool */}
       <Dialog open={showWelcome} onOpenChange={(o) => !o && closeWelcome()}>
-        <DialogContent className="max-w-sm p-0 overflow-hidden border-0">
-          <div className="relative bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-6 text-center">
+        <DialogContent className="max-w-sm p-0 overflow-hidden border-0 bg-card">
+          <div className="relative bg-panel text-panel-foreground p-6 text-center">
             <button
               onClick={closeWelcome}
               className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition"
@@ -122,16 +106,16 @@ export default function Home() {
             >
               <X className="w-4 h-4" />
             </button>
-            <div className="text-3xl font-black tracking-wide mb-1">Whirlpool</div>
-            <p className="text-xs opacity-80">Excellence européenne · Depuis 1911</p>
+            <div className="text-3xl font-serif font-bold tracking-wide mb-1">Whirlpool</div>
+            <p className="text-xs opacity-80 font-serif">Excellence européenne · Depuis 1911</p>
           </div>
           <div className="p-5 space-y-3">
-            <h3 className="font-bold text-lg text-center">Bienvenue, investisseur !</h3>
+            <h3 className="font-serif font-bold text-lg text-center">Bienvenue, investisseur</h3>
             <p className="text-sm text-muted-foreground text-center leading-relaxed">
               Whirlpool est le leader européen de l'électroménager. Investissez dans nos
               réfrigérateurs et générez des revenus quotidiens fiables et sécurisés.
             </p>
-            <ul className="text-xs space-y-1.5 bg-secondary rounded-lg p-3">
+            <ul className="text-xs space-y-1.5 bg-secondary rounded-md p-3">
               <li>✓ Revenus quotidiens automatiques</li>
               <li>✓ Paiements sécurisés via MoneyFusion</li>
               <li>✓ Programme de parrainage 3 niveaux</li>
@@ -142,7 +126,7 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
               onClick={closeWelcome}
-              className="w-full flex items-center justify-center gap-2 h-12 rounded-pill bg-[#229ED9] hover:bg-[#1c8ec3] text-white font-semibold transition"
+              className="w-full flex items-center justify-center gap-2 h-12 rounded-sm bg-[#229ED9] hover:bg-[#1c8ec3] text-white font-semibold transition"
             >
               <Send className="w-4 h-4" />
               Rejoindre la chaîne Telegram officielle
