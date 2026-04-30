@@ -21,20 +21,39 @@ export default function Support() {
       <BackHeader title="Service client" />
       <div className="px-4 mt-4 space-y-4">
         <div className="rounded-xl overflow-hidden h-32 relative">
-          <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=60" alt="" loading="lazy" className="w-full h-full object-cover" />
+          <img
+            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=60"
+            alt=""
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-panel-dark/85 flex items-center justify-center">
-            <img src={logo} alt="Whirlpool" className="h-10 w-auto brightness-0 invert" />
+            <img
+              src={logo}
+              alt="Whirpol"
+              className="h-10 w-auto brightness-0 invert"
+            />
           </div>
         </div>
 
         <div className="flex justify-center">
-          <span className="bg-panel text-panel-foreground rounded-full px-4 py-1 text-sm font-medium">9:00 — 20:00</span>
+          <span className="bg-panel text-panel-foreground rounded-full px-4 py-1 text-sm font-medium">
+            9:00 — 20:00
+          </span>
         </div>
 
         <div className="bg-secondary rounded-xl divide-y divide-border">
-          {LINKS.map(l => (
-            <a key={l.label} href={l.href} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4">
-              <div className="w-9 h-9 rounded-full bg-[#229ED9] flex items-center justify-center text-white"><Send className="w-4 h-4" /></div>
+          {LINKS.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-3 p-4"
+            >
+              <div className="w-9 h-9 rounded-full bg-[#229ED9] flex items-center justify-center text-white">
+                <Send className="w-4 h-4" />
+              </div>
               <span className="flex-1 text-sm">{l.label}</span>
               <ChevronRight className="w-5 h-5 text-muted-foreground" />
             </a>
@@ -42,7 +61,9 @@ export default function Support() {
         </div>
 
         <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal pl-5">
-          {NOTES.map(n => <li key={n}>{n}</li>)}
+          {NOTES.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
         </ol>
       </div>
     </div>

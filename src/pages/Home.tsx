@@ -46,7 +46,7 @@ export default function Home() {
         <div className="rounded-md overflow-hidden aspect-[16/10]">
           <img
             src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=860&q=70"
-            alt="Whirlpool — Showroom"
+            alt="Whirpol — Showroom"
             loading="eager"
             fetchPriority="high"
             className="w-full h-full object-cover"
@@ -58,7 +58,9 @@ export default function Home() {
           {actions.map(({ to, icon: Icon, label }) => (
             <Link key={to} to={to} className="tile-panel">
               <Icon className="w-7 h-7" strokeWidth={1.5} />
-              <span className="text-[11px] font-serif font-medium tracking-wide text-center">{label}</span>
+              <span className="text-[11px] font-serif font-medium tracking-wide text-center">
+                {label}
+              </span>
             </Link>
           ))}
         </div>
@@ -66,28 +68,57 @@ export default function Home() {
         {/* Solde / Revenu en bandeau discret */}
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-card border border-border/40 rounded-md px-4 py-3">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Solde</p>
-            <p className="text-lg font-serif font-semibold text-panel-dark mt-0.5">{formatMoney(profile?.balance ?? 0, cur)}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Solde
+            </p>
+            <p className="text-lg font-serif font-semibold text-panel-dark mt-0.5">
+              {formatMoney(profile?.balance ?? 0, cur)}
+            </p>
           </div>
           <div className="bg-card border border-border/40 rounded-md px-4 py-3">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Revenu cumulé</p>
-            <p className="text-lg font-serif font-semibold text-panel-dark mt-0.5">{formatMoney(profile?.total_revenue ?? 0, cur)}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Revenu cumulé
+            </p>
+            <p className="text-lg font-serif font-semibold text-panel-dark mt-0.5">
+              {formatMoney(profile?.total_revenue ?? 0, cur)}
+            </p>
           </div>
         </div>
 
         {/* Grille de produits style boutique */}
         {!loading && products.length > 0 && (
           <div className="grid grid-cols-2 gap-3 pt-2">
-            {products.slice(0, 4).map(p => (
-              <Link key={p.id} to="/products" className="luxury-card flex flex-col">
-                <div className="text-center py-2 font-serif font-semibold text-sm">{p.name}</div>
+            {products.map((p) => (
+              <Link
+                key={p.id}
+                to="/products"
+                className="luxury-card flex flex-col"
+              >
+                <div className="text-center py-2 font-serif font-semibold text-sm">
+                  {p.name}
+                </div>
                 <div className="aspect-square bg-secondary">
-                  {p.image_url && <img src={p.image_url} alt={p.name} loading="lazy" className="w-full h-full object-cover" />}
+                  {p.image_url && (
+                    <img
+                      src={p.image_url}
+                      alt={p.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
                 <div className="p-3 space-y-0.5">
-                  <p className="text-xs"><span className="text-destructive font-semibold">{formatMoney(p.daily_revenue, cur)}</span></p>
-                  <p className="text-[10px] text-muted-foreground">Revenu quotidien</p>
-                  <p className="text-sm font-serif font-semibold mt-1">{formatMoney(p.price, cur)}</p>
+                  <p className="text-xs">
+                    <span className="text-destructive font-semibold">
+                      {formatMoney(p.daily_revenue, cur)}
+                    </span>
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Revenu quotidien
+                  </p>
+                  <p className="text-sm font-serif font-semibold mt-1">
+                    {formatMoney(p.price, cur)}
+                  </p>
                 </div>
               </Link>
             ))}
@@ -95,7 +126,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* Popup d'accueil Whirlpool */}
+      {/* Popup d'accueil Whirpol */}
       <Dialog open={showWelcome} onOpenChange={(o) => !o && closeWelcome()}>
         <DialogContent className="max-w-sm p-0 overflow-hidden border-0 bg-card">
           <div className="relative bg-panel text-panel-foreground p-6 text-center">
@@ -106,14 +137,21 @@ export default function Home() {
             >
               <X className="w-4 h-4" />
             </button>
-            <div className="text-3xl font-serif font-bold tracking-wide mb-1">Whirlpool</div>
-            <p className="text-xs opacity-80 font-serif">Excellence européenne · Depuis 1911</p>
+            <div className="text-3xl font-serif font-bold tracking-wide mb-1">
+              Whirpol
+            </div>
+            <p className="text-xs opacity-80 font-serif">
+              Excellence européenne · Depuis 1911
+            </p>
           </div>
           <div className="p-5 space-y-3">
-            <h3 className="font-serif font-bold text-lg text-center">Bienvenue, investisseur</h3>
+            <h3 className="font-serif font-bold text-lg text-center">
+              Bienvenue, investisseur
+            </h3>
             <p className="text-sm text-muted-foreground text-center leading-relaxed">
-              Whirlpool est le leader européen de l'électroménager. Investissez dans nos
-              réfrigérateurs et générez des revenus quotidiens fiables et sécurisés.
+              Whirpol est le leader européen de l'électroménager. Investissez
+              dans nos réfrigérateurs et générez des revenus quotidiens fiables
+              et sécurisés.
             </p>
             <ul className="text-xs space-y-1.5 bg-secondary rounded-md p-3">
               <li>✓ Revenus quotidiens automatiques</li>

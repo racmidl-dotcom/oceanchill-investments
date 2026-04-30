@@ -3,7 +3,19 @@ import { PageWrapper } from "@/components/layout/PageWrapper";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { useAuth } from "@/context/AuthContext";
 import { formatMoney, getCountry } from "@/lib/countries";
-import { ChevronRight, CreditCard, Wallet, FileText, Building2, Info, BookOpen, Headphones, BarChart3, Power } from "lucide-react";
+import {
+  ChevronRight,
+  CreditCard,
+  Wallet,
+  FileText,
+  Building2,
+  Info,
+  BookOpen,
+  Headphones,
+  BarChart3,
+  Power,
+} from "lucide-react";
+import profileBanner from "@/assets/Capture d’écran du 2026-04-30 01-28-03.png";
 
 const menu1 = [
   { to: "/profile", icon: FileText, label: "Détails du compte" },
@@ -23,24 +35,45 @@ export default function Profile() {
   const { profile, signOut, isAdmin } = useAuth();
   const nav = useNavigate();
   const cur = getCountry(profile?.country).currency;
-  const handleLogout = async () => { await signOut(); nav("/login", { replace: true }); };
+  const handleLogout = async () => {
+    await signOut();
+    nav("/login", { replace: true });
+  };
 
   return (
     <PageWrapper>
       <div className="px-3 pt-3 space-y-4">
         {/* Bandeau taupe header avec logo + infos compte */}
-        <div className="bg-panel text-panel-foreground rounded-md p-5">
-          <div className="flex justify-center mb-4">
-            <AppHeader />
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-center">
-            <div>
-              <p className="text-[11px] opacity-80 font-serif">Numéro de téléphone</p>
-              <p className="font-serif font-bold text-lg mt-1">{profile?.phone}</p>
+        <div
+          className="relative rounded-md overflow-hidden p-5 text-panel-foreground"
+          style={{
+            backgroundImage: `url(${profileBanner})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="absolute inset-0 bg-panel/60" />
+          <div className="relative">
+            <div className="flex justify-center mb-4">
+              <AppHeader />
             </div>
-            <div>
-              <p className="text-[11px] opacity-80 font-serif">Solde du compte</p>
-              <p className="font-serif font-bold text-lg mt-1">{formatMoney(profile?.balance ?? 0, cur)}</p>
+            <div className="grid grid-cols-2 gap-2 text-center">
+              <div>
+                <p className="text-[11px] opacity-80 font-serif">
+                  Numéro de téléphone
+                </p>
+                <p className="font-serif font-bold text-lg mt-1">
+                  {profile?.phone}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] opacity-80 font-serif">
+                  Solde du compte
+                </p>
+                <p className="font-serif font-bold text-lg mt-1">
+                  {formatMoney(profile?.balance ?? 0, cur)}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -60,7 +93,11 @@ export default function Profile() {
         {/* Bloc menu 1 — taupe avec items */}
         <div className="bg-panel text-panel-foreground rounded-md overflow-hidden">
           {menu1.map(({ to, icon: Icon, label }, i) => (
-            <Link key={i} to={to} className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-b border-white/10 last:border-0">
+            <Link
+              key={i}
+              to={to}
+              className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-b border-white/10 last:border-0"
+            >
               <Icon className="w-5 h-5 opacity-90" strokeWidth={1.5} />
               <span className="flex-1 text-sm font-serif">{label}</span>
               <ChevronRight className="w-5 h-5 opacity-80" />
@@ -71,22 +108,36 @@ export default function Profile() {
         {/* Bloc menu 2 */}
         <div className="bg-panel text-panel-foreground rounded-md overflow-hidden">
           {menu2.map(({ to, icon: Icon, label }, i) => (
-            <Link key={i} to={to} className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-b border-white/10 last:border-0">
+            <Link
+              key={i}
+              to={to}
+              className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-b border-white/10 last:border-0"
+            >
               <Icon className="w-5 h-5 opacity-90" strokeWidth={1.5} />
               <span className="flex-1 text-sm font-serif">{label}</span>
               <ChevronRight className="w-5 h-5 opacity-80" />
             </Link>
           ))}
           {isAdmin && (
-            <Link to="/admin/users" className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-t border-white/10">
+            <Link
+              to="/admin/users"
+              className="flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-t border-white/10"
+            >
               <BarChart3 className="w-5 h-5" strokeWidth={1.5} />
-              <span className="flex-1 text-sm font-serif font-semibold">Panel administrateur</span>
+              <span className="flex-1 text-sm font-serif font-semibold">
+                Panel administrateur
+              </span>
               <ChevronRight className="w-5 h-5 opacity-80" />
             </Link>
           )}
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-t border-white/10">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-4 hover:bg-panel-dark/30 transition border-t border-white/10"
+          >
             <Power className="w-5 h-5" strokeWidth={1.5} />
-            <span className="flex-1 text-sm font-serif text-left">Quittez l'application</span>
+            <span className="flex-1 text-sm font-serif text-left">
+              Quittez l'application
+            </span>
             <ChevronRight className="w-5 h-5 opacity-80" />
           </button>
         </div>
