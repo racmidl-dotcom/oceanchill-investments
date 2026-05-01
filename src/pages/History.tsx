@@ -13,12 +13,19 @@ type Row = {
   ref?: string;
   extra?: string;
 };
-const STATUS_COLOR: Record<string, string> = {
-  pending: "text-warning",
-  approved: "text-success",
-  confirmed: "text-success",
-  rejected: "text-destructive",
-  active: "text-success",
+const statusConfig: Record<string, { label: string; className: string }> = {
+  pending: {
+    label: "En attente",
+    className: "bg-yellow-100 text-yellow-800 border-yellow-300",
+  },
+  confirmed: {
+    label: "Confirmé",
+    className: "bg-green-100 text-green-800 border-green-300",
+  },
+  rejected: {
+    label: "Échoué",
+    className: "bg-red-100 text-red-800 border-red-300",
+  },
 };
 
 const List = ({ rows, cur }: { rows: Row[]; cur: "XOF" | "XAF" | "CDF" }) => (
@@ -42,11 +49,16 @@ const List = ({ rows, cur }: { rows: Row[]; cur: "XOF" | "XAF" | "CDF" }) => (
             {new Date(r.created_at).toLocaleString("fr-FR")}
           </p>
         </div>
-        <span
-          className={`text-xs font-bold uppercase ${STATUS_COLOR[r.status] ?? "text-muted-foreground"}`}
-        >
-          {r.status}
-        </span>
+        {(() => {
+          const config = statusConfig[r.status] ?? statusConfig.pending;
+          return (
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full border font-medium ${config.className}`}
+            >
+              {config.label}
+            </span>
+          );
+        })()}
       </div>
     ))}
   </div>

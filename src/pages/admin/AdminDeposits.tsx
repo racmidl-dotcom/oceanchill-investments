@@ -7,6 +7,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AdminDeposits() {
   const [rows, setRows] = useState<any[]>([]);
+  const statusConfig: Record<string, { label: string; className: string }> = {
+    pending: {
+      label: "⏳ En attente",
+      className: "bg-yellow-100 text-yellow-800",
+    },
+    confirmed: {
+      label: "✅ Confirmé",
+      className: "bg-green-100 text-green-800",
+    },
+    rejected: {
+      label: "❌ Échoué",
+      className: "bg-red-100 text-red-800",
+    },
+  };
   const load = async () => {
     const { data: depRows, error: depError } = await supabase
       .from("deposits")
@@ -158,9 +172,15 @@ export default function AdminDeposits() {
                         <td className="p-3 text-xs">{r.reference}</td>
                         <td className="p-3">
                           <span
-                            className={`px-2 py-0.5 rounded text-xs ${r.status === "confirmed" ? "bg-success/20 text-success" : r.status === "rejected" ? "bg-destructive/20 text-destructive" : "bg-warning/20 text-warning"}`}
+                            className={`px-2 py-0.5 rounded text-xs ${
+                              (statusConfig[r.status] ?? statusConfig.pending)
+                                .className
+                            }`}
                           >
-                            {r.status}
+                            {
+                              (statusConfig[r.status] ?? statusConfig.pending)
+                                .label
+                            }
                           </span>
                         </td>
                         <td className="p-3 text-xs">

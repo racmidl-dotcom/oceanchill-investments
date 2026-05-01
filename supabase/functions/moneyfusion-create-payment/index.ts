@@ -56,6 +56,8 @@ Deno.serve(async (req: Request) => {
       .maybeSingle();
 
     // Pré-création du dépôt en pending (sans token, on l'updatera)
+    // expires_at = maintenant + 5 minutes
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
     const { data: deposit, error: depErr } = await admin
       .from("deposits")
       .insert({
@@ -64,6 +66,7 @@ Deno.serve(async (req: Request) => {
         channel: "moneyfusion",
         status: "pending",
         reference: `MF-${Date.now()}`,
+        expires_at: expiresAt,
       })
       .select()
       .single();

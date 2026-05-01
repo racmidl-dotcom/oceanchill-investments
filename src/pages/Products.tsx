@@ -33,6 +33,17 @@ export default function Products() {
       return;
     }
     setBusy(true);
+    const currentBalance = Number(profile.balance ?? 0);
+    const nextBalance = currentBalance - Number(target.price);
+    const { error: debitError } = await supabase
+      .from("users")
+      .update({ balance: nextBalance })
+      .eq("id", profile.id);
+    if (debitError) {
+      toast.error("Erreur lors du débit : " + debitError.message);
+      setBusy(false);
+      return;
+    }
     const end = new Date(
       Date.now() + target.duration_days * 86400000,
     ).toISOString();
@@ -45,33 +56,19 @@ export default function Products() {
       end_date: end,
     });
     if (e1) {
+      await supabase
+        .from("users")
+        .update({ balance: currentBalance })
+        .eq("id", profile.id);
       toast.error(e1.message);
       setBusy(false);
       return;
     }
-    const { data: userRow, error: u1 } = await supabase
-      .from("users")
-      .select("balance")
-      .eq("id", profile.id)
-      .maybeSingle();
-    if (u1 || !userRow) {
-      toast.error(u1?.message || "Impossible de charger le solde");
-      setBusy(false);
-      return;
-    }
-    const nextBalance = Number(userRow.balance ?? 0) - Number(target.price);
-    const { error: e2 } = await supabase
-      .from("users")
-      .update({ balance: nextBalance })
-      .eq("id", profile.id);
     setBusy(false);
     setTarget(null);
-    if (e2) toast.error(e2.message);
-    else {
-      toast.success(`${target.name} acheté !`);
-      refetchProfile();
-      reload();
-    }
+    toast.success(`${target.name} acheté !`);
+    refetchProfile();
+    reload();
   };
 
   return (
