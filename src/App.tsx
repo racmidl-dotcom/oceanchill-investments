@@ -5,7 +5,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/context/AuthContext";
-import { RequireAuth } from "@/components/layout/RequireAuth";
+import PrivateRoute from "@/components/PrivateRoute";
+import PublicRoute from "@/components/PublicRoute";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -23,7 +24,6 @@ const About = lazy(() => import("./pages/About"));
 const Rules = lazy(() => import("./pages/Rules"));
 const Support = lazy(() => import("./pages/Support"));
 const BankAccount = lazy(() => import("./pages/BankAccount"));
-const NotFound = lazy(() => import("./pages/NotFound"));
 
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
@@ -51,129 +51,150 @@ const App = () => (
         <AuthProvider>
           <Suspense fallback={<Loading />}>
             <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route
+                path="/"
+                element={
+                  <PublicRoute>
+                    <Navigate to="/login" replace />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute>
+                    <Login />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <PublicRoute>
+                    <Register />
+                  </PublicRoute>
+                }
+              />
 
               <Route
                 path="/home"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Home />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/products"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Products />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/my-products"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <MyProducts />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/team"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Team />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/profile"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Profile />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/account"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <AccountDetails />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/deposit"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Deposit />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/withdraw"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Withdraw />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/history"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <History />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/withdrawals"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <WithdrawalsHistory />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/about"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <About />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/rules"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Rules />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/support"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <Support />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/bank"
                 element={
-                  <RequireAuth>
+                  <PrivateRoute>
                     <BankAccount />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               />
 
               <Route
                 path="/admin"
                 element={
-                  <RequireAuth admin>
+                  <PrivateRoute>
                     <AdminLayout />
-                  </RequireAuth>
+                  </PrivateRoute>
                 }
               >
                 <Route index element={<Navigate to="users" replace />} />
@@ -186,7 +207,7 @@ const App = () => (
                 <Route path="promoters" element={<AdminPromoters />} />
               </Route>
 
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
           </Suspense>
         </AuthProvider>
