@@ -33,17 +33,31 @@ export default function Withdraw() {
 
   const submit = async () => {
     if (!profile) return;
-    if (amount < MIN) return toast.error(`Minimum ${MIN}`);
+    if (amount < MIN) return toast.error(`Minimum ${MIN} FCFA`);
     if ((profile.balance ?? 0) < amount)
       return toast.error("Solde insuffisant");
+
     const { data: bank } = await supabase
       .from("bank_accounts")
       .select("*")
       .eq("user_id", profile.id)
       .maybeSingle();
     if (!bank) return toast.error("Enregistrez d'abord un compte bancaire");
+
     setBusy(true);
-    const { error } = await supabase.from("withdrawals").insert({
+
+    const newBalance = Number(profile.balance ?? 0) - Number(amount);
+    const { error: debitError } = await supabase
+      .from("users")
+      .update({ balance: newBalance })
+      .eq("id", profile.id);
+
+    if (debitError) {
+      setBusy(false);
+      return toast.error("Erreur lors du débit : " + debitError.message);
+    }
+
+    const { error: withdrawError } = await supabase.from("withdrawals").insert({
       user_id: profile.id,
       amount,
       fee,
@@ -51,33 +65,21 @@ export default function Withdraw() {
       operator,
       phone: bank.phone,
     });
-    if (!error) {
-      const { data: userRow, error: u1 } = await supabase
+
+    if (withdrawError) {
+      await supabase
         .from("users")
-        .select("balance")
-        .eq("id", profile.id)
-        .maybeSingle();
-      if (u1 || !userRow) {
-        setBusy(false);
-        return toast.error(u1?.message || "Impossible de charger le solde");
-      }
-      const nextBalance = Number(userRow.balance ?? 0) - Number(amount);
-      const { error: u2 } = await supabase
-        .from("users")
-        .update({ balance: nextBalance })
+        .update({ balance: Number(profile.balance ?? 0) })
         .eq("id", profile.id);
-      if (u2) {
-        setBusy(false);
-        return toast.error(u2.message);
-      }
-      await refetchProfile();
+      setBusy(false);
+      return toast.error("Erreur : " + withdrawError.message);
     }
+
+    await refetchProfile();
+
     setBusy(false);
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Demande de retrait envoyée");
-      nav("/history");
-    }
+    toast.success("Demande de retrait envoyée !");
+    nav("/history");
   };
 
   return (
@@ -141,9 +143,16 @@ export default function Withdraw() {
         <Button
           onClick={submit}
           disabled={busy}
-          className="w-full h-12 rounded-sm bg-panel-dark hover:bg-panel text-panel-foreground font-serif font-semibold tracking-widest uppercase text-sm"
+          className="w-full h-12 rounded-sm bg-panel-dark hover:bg-panel text-panel-foreground font-serif font-semibold tracking-widest uppercase text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {busy ? "..." : "Retirer maintenant"}
+          {busy ? (
+            <span className="flex items-center gap-2 justify-center">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Traitement...
+            </span>
+          ) : (
+            "Retirer maintenant"
+          )}
         </Button>
 
         <ol className="text-xs text-muted-foreground space-y-1 list-decimal pl-4 pt-2">
