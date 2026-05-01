@@ -1,15 +1,22 @@
 {
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "redirects": [
     {
-      "source": "http://whirlpolrefrigerateur.site/:path*",
-      "destination": "https://www.whirlpolrefrigerateur.site/:path*",
-      "permanent": true
-    },
-    {
-      "source": "https://whirlpolrefrigerateur.site/:path*",
-      "destination": "https://www.whirlpolrefrigerateur.site/:path*",
+      "source": "/",
+      "has": [{ "type": "host", "value": "whirlpolrefrigerateur.site" }],
+      "destination": "https://www.whirlpolrefrigerateur.site",
       "permanent": true
     }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
 }
