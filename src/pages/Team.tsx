@@ -38,25 +38,49 @@ export default function Team() {
 
   const load = useCallback(async () => {
     if (!profile) return;
-    const { data: rows } = await supabase
+
+    const { data: rows, error } = await supabase
       .from("referrals")
-      .select(
-        "id, level, commission, created_at, referred_id, red:users!referrals_referred_id_fkey(phone)",
-      )
+      .select("id, level, commission, created_at, referred_id, referrer_id")
       .eq("referrer_id", profile.id)
       .order("created_at", { ascending: false });
 
+    if (error) {
+      console.error("Erreur referrals:", error);
+      return;
+    }
+
     const list = rows ?? [];
-    setRefs(list);
 
     const referredIds = Array.from(
       new Set(list.map((r: any) => r.referred_id)),
     );
-    if (referredIds.length) {
+
+    let usersMap: Record<string, string> = {};
+    if (referredIds.length > 0) {
+      const { data: usersData } = await supabase
+        .from("users")
+        .select("id, phone")
+        .in("id", referredIds);
+
+      (usersData ?? []).forEach((u: any) => {
+        usersMap[u.id] = u.phone;
+      });
+    }
+
+    const enrichedList = list.map((r: any) => ({
+      ...r,
+      red: { phone: usersMap[r.referred_id] ?? null },
+    }));
+
+    setRefs(enrichedList);
+
+    if (referredIds.length > 0) {
       const { data: invRows } = await supabase
         .from("investments")
         .select("user_id, amount")
         .in("user_id", referredIds);
+
       const map: Record<string, number> = {};
       (invRows ?? []).forEach((r: any) => {
         map[r.user_id] = (map[r.user_id] ?? 0) + Number(r.amount);
@@ -69,7 +93,8 @@ export default function Team() {
     const perLevel: Record<number, { count: number; rev: number }> = {};
     const byLevel = new Map<number, Set<string>>();
     const all = new Set<string>();
-    list.forEach((r: any) => {
+
+    enrichedList.forEach((r: any) => {
       const level = Number(r.level);
       if (!byLevel.has(level)) byLevel.set(level, new Set());
       byLevel.get(level)!.add(r.referred_id);
@@ -77,6 +102,7 @@ export default function Team() {
       if (!perLevel[level]) perLevel[level] = { count: 0, rev: 0 };
       perLevel[level].rev += Number(r.commission);
     });
+
     byLevel.forEach((set, level) => {
       if (!perLevel[level]) perLevel[level] = { count: 0, rev: 0 };
       perLevel[level].count = set.size;
@@ -84,7 +110,10 @@ export default function Team() {
 
     setStats({
       teamSize: all.size,
-      totalRev: list.reduce((s: number, r: any) => s + Number(r.commission), 0),
+      totalRev: enrichedList.reduce(
+        (s: number, r: any) => s + Number(r.commission),
+        0,
+      ),
       perLevel,
     });
   }, [profile, setRefs, setInvestedMap, setStats]);

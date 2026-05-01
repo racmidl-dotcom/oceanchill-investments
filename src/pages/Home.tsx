@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CreditCard, Banknote, Headphones } from "lucide-react";
 
-const TELEGRAM_URL = "https://t.me/whirlpool_officiel";
+const TELEGRAM_URL = "https://t.me/+GlH-tQrrgio1MjA0";
 
 const actions = [
   { to: "/deposit", icon: CreditCard, label: "Recharger" },
