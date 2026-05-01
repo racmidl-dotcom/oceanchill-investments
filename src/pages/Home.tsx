@@ -97,7 +97,7 @@ export default function Home() {
                 <div className="text-center py-2 font-serif font-semibold text-sm">
                   {p.name}
                 </div>
-                <div className="aspect-square bg-secondary">
+                <div className="h-40 bg-secondary">
                   {p.image_url && (
                     <img
                       src={p.image_url}
@@ -108,16 +108,19 @@ export default function Home() {
                   )}
                 </div>
                 <div className="p-3 space-y-0.5">
-                  <p className="text-xs">
+                  <p className="text-sm font-serif font-semibold">
+                    {formatMoney(p.price, cur)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Somme du produit
+                  </p>
+                  <p className="text-xs mt-1">
                     <span className="text-destructive font-semibold">
                       {formatMoney(p.daily_revenue, cur)}
                     </span>
                   </p>
                   <p className="text-[10px] text-muted-foreground">
                     Revenu quotidien
-                  </p>
-                  <p className="text-sm font-serif font-semibold mt-1">
-                    {formatMoney(p.price, cur)}
                   </p>
                 </div>
               </Link>

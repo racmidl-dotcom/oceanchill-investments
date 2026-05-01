@@ -3,9 +3,14 @@ import { ChevronRight, Send } from "lucide-react";
 import logo from "@/assets/whirlpool-logo.png";
 
 const LINKS = [
-  { label: "Service client", href: "https://t.me/" },
-  { label: "Chaîne", href: "https://t.me/" },
-  { label: "Groupe", href: "https://t.me/" },
+  { label: "Service client", href: "https://t.me/Supportwhirlpool" },
+  { label: "Chaîne", href: "https://t.me/+GIH-tQrrgio1MjA0" },
+  { label: "Groupe", href: "https://t.me/+soIJXqMFJVY1ZmVk" },
+  { label: "Service WhatsApp", href: "https://wa.me/message/RSMCAUHKOI4XM1" },
+  {
+    label: "Groupe WhatsApp",
+    href: "https://chat.whatsapp.com/DB9Uh6wGEGe73eBV2fwKJG",
+  },
 ];
 
 const NOTES = [

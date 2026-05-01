@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { useAuth } from "@/context/AuthContext";
@@ -27,44 +27,113 @@ const LEVELS = [
 export default function Team() {
   const { profile } = useAuth();
   const cur = getCountry(profile?.country).currency;
-  const link = `${window.location.origin}/register?ref=${profile?.ref_code ?? ""}`;
+  const link = `https://www.whirlpolrefrigerateur.site/register?ref=${profile?.ref_code ?? ""}`;
+  const [refs, setRefs] = useState<any[]>([]);
+  const [investedMap, setInvestedMap] = useState<Record<string, number>>({});
   const [stats, setStats] = useState<{
     teamSize: number;
     totalRev: number;
     perLevel: Record<number, { count: number; rev: number }>;
   }>({ teamSize: 0, totalRev: 0, perLevel: {} });
 
+  const load = useCallback(async () => {
+    if (!profile) return;
+    const { data: rows } = await supabase
+      .from("referrals")
+      .select(
+        "id, level, commission, created_at, referred_id, red:users!referrals_referred_id_fkey(phone)",
+      )
+      .eq("referrer_id", profile.id)
+      .order("created_at", { ascending: false });
+
+    const list = rows ?? [];
+    setRefs(list);
+
+    const referredIds = Array.from(
+      new Set(list.map((r: any) => r.referred_id)),
+    );
+    if (referredIds.length) {
+      const { data: invRows } = await supabase
+        .from("investments")
+        .select("user_id, amount")
+        .in("user_id", referredIds);
+      const map: Record<string, number> = {};
+      (invRows ?? []).forEach((r: any) => {
+        map[r.user_id] = (map[r.user_id] ?? 0) + Number(r.amount);
+      });
+      setInvestedMap(map);
+    } else {
+      setInvestedMap({});
+    }
+
+    const perLevel: Record<number, { count: number; rev: number }> = {};
+    const byLevel = new Map<number, Set<string>>();
+    const all = new Set<string>();
+    list.forEach((r: any) => {
+      const level = Number(r.level);
+      if (!byLevel.has(level)) byLevel.set(level, new Set());
+      byLevel.get(level)!.add(r.referred_id);
+      all.add(r.referred_id);
+      if (!perLevel[level]) perLevel[level] = { count: 0, rev: 0 };
+      perLevel[level].rev += Number(r.commission);
+    });
+    byLevel.forEach((set, level) => {
+      if (!perLevel[level]) perLevel[level] = { count: 0, rev: 0 };
+      perLevel[level].count = set.size;
+    });
+
+    setStats({
+      teamSize: all.size,
+      totalRev: list.reduce((s: number, r: any) => s + Number(r.commission), 0),
+      perLevel,
+    });
+  }, [profile, setRefs, setInvestedMap, setStats]);
+
   useEffect(() => {
     if (!profile) return;
-    const load = async () => {
-      const [{ data: refs }, { count: teamCount }] = await Promise.all([
-        supabase.from("referrals").select("*").eq("referrer_id", profile.id),
-        supabase
-          .from("users")
-          .select("id", { count: "exact", head: true })
-          .eq("referred_by", profile.id),
-      ]);
-
-      const rows = refs ?? [];
-      const perLevel: Record<number, { count: number; rev: number }> = {};
-      rows.forEach((r: any) => {
-        if (!perLevel[r.level]) perLevel[r.level] = { count: 0, rev: 0 };
-        perLevel[r.level].count++;
-        perLevel[r.level].rev += Number(r.commission);
-      });
-
-      setStats({
-        teamSize: teamCount ?? 0,
-        totalRev: rows.reduce(
-          (s: number, r: any) => s + Number(r.commission),
-          0,
-        ),
-        perLevel,
-      });
-    };
-
     load();
-  }, [profile]);
+    const interval = setInterval(load, 15000);
+    const onFocus = () => load();
+    window.addEventListener("focus", onFocus);
+    const channel = supabase
+      .channel(`team-referrals-${profile.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "referrals",
+          filter: `referrer_id=eq.${profile.id}`,
+        },
+        () => load(),
+      )
+      .subscribe();
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      supabase.removeChannel(channel);
+    };
+  }, [profile, load]);
+
+  const groupedRefs = useMemo(() => {
+    const map = new Map<
+      string,
+      { level: number; referred_id: string; phone?: string; commission: number }
+    >();
+    refs.forEach((r: any) => {
+      const key = `${r.level}:${r.referred_id}`;
+      const current = map.get(key) ?? {
+        level: r.level,
+        referred_id: r.referred_id,
+        phone: r.red?.phone,
+        commission: 0,
+      };
+      current.commission += Number(r.commission);
+      if (!current.phone && r.red?.phone) current.phone = r.red.phone;
+      map.set(key, current);
+    });
+    return Array.from(map.values()).sort((a, b) => a.level - b.level);
+  }, [refs]);
 
   const copy = (txt: string) => {
     navigator.clipboard.writeText(txt);
@@ -120,37 +189,84 @@ export default function Team() {
           </div>
         </div>
 
-        <div className="bg-secondary rounded-xl divide-y divide-border">
-          {LEVELS.map((lv) => {
-            const s = stats.perLevel[lv.level] ?? { count: 0, rev: 0 };
-            return (
-              <div key={lv.name} className="flex items-center p-4 gap-3">
+        <div className="bg-secondary rounded-xl p-4">
+          <h3 className="font-bold border-l-4 border-accent pl-2 mb-3">
+            Commissions
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-card border border-border/40 rounded-md p-3">
+              <p className="text-xs text-muted-foreground">Total commissions</p>
+              <p className="text-sm font-semibold">
+                {formatMoney(stats.totalRev, cur)}
+              </p>
+            </div>
+            <div className="bg-card border border-border/40 rounded-md p-3">
+              <p className="text-xs text-muted-foreground">Filleuls actifs</p>
+              <p className="text-sm font-semibold">{stats.teamSize}</p>
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+            {LEVELS.map((lv) => {
+              const s = stats.perLevel[lv.level] ?? { count: 0, rev: 0 };
+              return (
                 <div
-                  className={`w-12 h-12 rounded-full bg-gradient-to-br ${lv.color} flex items-center justify-center text-white text-[10px] font-extrabold shadow`}
+                  key={lv.level}
+                  className="bg-card border border-border/40 rounded-md p-2"
                 >
-                  {lv.name.slice(0, 4)}
+                  <p className="text-[10px] text-muted-foreground">
+                    N{lv.level}
+                  </p>
+                  <p className="text-xs font-semibold">
+                    {formatMoney(s.rev, cur)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {s.count} filleul(s)
+                  </p>
                 </div>
-                <div className="flex-1 grid grid-cols-3 gap-2 text-center">
-                  <div>
-                    <p className="font-bold text-sm">{lv.rate}</p>
-                    <p className="text-[10px] text-muted-foreground">Taux</p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm">{s.count}</p>
-                    <p className="text-[10px] text-muted-foreground">
-                      Utilisateurs
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm">
-                      {formatMoney(s.rev, cur)}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground">Revenu</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="bg-secondary rounded-xl p-4">
+          <h3 className="font-bold border-l-4 border-accent pl-2 mb-3">
+            Liste des filleuls
+          </h3>
+          {groupedRefs.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Aucun filleul pour le moment.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead className="text-muted-foreground">
+                  <tr>
+                    <th className="text-left p-2">Filleul</th>
+                    <th className="text-left p-2">Niveau</th>
+                    <th className="text-left p-2">Investi</th>
+                    <th className="text-left p-2">Commission</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupedRefs.map((r) => (
+                    <tr
+                      key={`${r.level}-${r.referred_id}`}
+                      className="border-t border-border"
+                    >
+                      <td className="p-2 font-mono">{r.phone ?? "—"}</td>
+                      <td className="p-2">N{r.level}</td>
+                      <td className="p-2">
+                        {formatMoney(investedMap[r.referred_id] ?? 0, cur)}
+                      </td>
+                      <td className="p-2 font-bold text-accent">
+                        {formatMoney(r.commission, cur)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         <div className="bg-secondary rounded-xl p-4">

@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "http://whirlpolrefrigerateur.site/:path*",
+      "destination": "https://www.whirlpolrefrigerateur.site/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://whirlpolrefrigerateur.site/:path*",
+      "destination": "https://www.whirlpolrefrigerateur.site/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

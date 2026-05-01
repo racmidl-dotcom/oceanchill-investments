@@ -3,7 +3,7 @@ import { BackHeader } from "@/components/layout/BackHeader";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { formatMoney, getCountry } from "@/lib/countries";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type Row = {
   id: string;
@@ -12,13 +12,6 @@ type Row = {
   created_at: string;
   ref?: string;
   extra?: string;
-};
-const STATUS_COLOR: Record<string, string> = {
-  pending: "text-warning",
-  approved: "text-success",
-  confirmed: "text-success",
-  rejected: "text-destructive",
-  active: "text-success",
 };
 
 const List = ({ rows, cur }: { rows: Row[]; cur: "XOF" | "XAF" | "CDF" }) => (
@@ -42,9 +35,7 @@ const List = ({ rows, cur }: { rows: Row[]; cur: "XOF" | "XAF" | "CDF" }) => (
             {new Date(r.created_at).toLocaleString("fr-FR")}
           </p>
         </div>
-        <span
-          className={`text-xs font-bold uppercase ${STATUS_COLOR[r.status] ?? "text-muted-foreground"}`}
-        >
+        <span className="text-xs font-bold uppercase text-muted-foreground">
           {r.status}
         </span>
       </div>
@@ -52,7 +43,7 @@ const List = ({ rows, cur }: { rows: Row[]; cur: "XOF" | "XAF" | "CDF" }) => (
   </div>
 );
 
-export default function History() {
+export default function AccountDetails() {
   const { profile } = useAuth();
   const cur = getCountry(profile?.country).currency;
   const [deposits, setDeposits] = useState<Row[]>([]);
@@ -96,35 +87,22 @@ export default function History() {
 
   return (
     <div className="app-shell">
-      <BackHeader title="Historique des recharges" />
-      <div className="px-4 mt-4">
-        <Tabs defaultValue="success">
-          <TabsList className="w-full grid grid-cols-3">
-            <TabsTrigger value="success">Réussies</TabsTrigger>
-            <TabsTrigger value="pending">En cours</TabsTrigger>
-            <TabsTrigger value="failed">Échouées</TabsTrigger>
-          </TabsList>
-          <TabsContent value="success" className="mt-3">
-            <List
-              rows={deposits.filter((d) =>
-                ["confirmed", "approved"].includes(d.status),
-              )}
-              cur={cur}
-            />
-          </TabsContent>
-          <TabsContent value="pending" className="mt-3">
-            <List
-              rows={deposits.filter((d) => d.status === "pending")}
-              cur={cur}
-            />
-          </TabsContent>
-          <TabsContent value="failed" className="mt-3">
-            <List
-              rows={deposits.filter((d) => d.status === "rejected")}
-              cur={cur}
-            />
-          </TabsContent>
-        </Tabs>
+      <BackHeader title="Détails du compte" />
+      <div className="px-4 mt-4 space-y-3">
+        <div className="bg-card border border-border/40 rounded-md p-4">
+          <Tabs defaultValue="dep">
+            <TabsList className="w-full grid grid-cols-2">
+              <TabsTrigger value="dep">Dépôts</TabsTrigger>
+              <TabsTrigger value="wd">Retraits</TabsTrigger>
+            </TabsList>
+            <TabsContent value="dep" className="mt-3">
+              <List rows={deposits} cur={cur} />
+            </TabsContent>
+            <TabsContent value="wd" className="mt-3">
+              <List rows={withdrawals} cur={cur} />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

@@ -14,9 +14,11 @@ const Products = lazy(() => import("./pages/Products"));
 const MyProducts = lazy(() => import("./pages/MyProducts"));
 const Team = lazy(() => import("./pages/Team"));
 const Profile = lazy(() => import("./pages/Profile"));
+const AccountDetails = lazy(() => import("./pages/AccountDetails"));
 const Deposit = lazy(() => import("./pages/Deposit"));
 const Withdraw = lazy(() => import("./pages/Withdraw"));
 const History = lazy(() => import("./pages/History"));
+const WithdrawalsHistory = lazy(() => import("./pages/WithdrawalsHistory"));
 const About = lazy(() => import("./pages/About"));
 const Rules = lazy(() => import("./pages/Rules"));
 const Support = lazy(() => import("./pages/Support"));
@@ -53,20 +55,127 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 
-              <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
-              <Route path="/products" element={<RequireAuth><Products /></RequireAuth>} />
-              <Route path="/my-products" element={<RequireAuth><MyProducts /></RequireAuth>} />
-              <Route path="/team" element={<RequireAuth><Team /></RequireAuth>} />
-              <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
-              <Route path="/deposit" element={<RequireAuth><Deposit /></RequireAuth>} />
-              <Route path="/withdraw" element={<RequireAuth><Withdraw /></RequireAuth>} />
-              <Route path="/history" element={<RequireAuth><History /></RequireAuth>} />
-              <Route path="/about" element={<RequireAuth><About /></RequireAuth>} />
-              <Route path="/rules" element={<RequireAuth><Rules /></RequireAuth>} />
-              <Route path="/support" element={<RequireAuth><Support /></RequireAuth>} />
-              <Route path="/bank" element={<RequireAuth><BankAccount /></RequireAuth>} />
+              <Route
+                path="/home"
+                element={
+                  <RequireAuth>
+                    <Home />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/products"
+                element={
+                  <RequireAuth>
+                    <Products />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/my-products"
+                element={
+                  <RequireAuth>
+                    <MyProducts />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/team"
+                element={
+                  <RequireAuth>
+                    <Team />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <RequireAuth>
+                    <Profile />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/account"
+                element={
+                  <RequireAuth>
+                    <AccountDetails />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/deposit"
+                element={
+                  <RequireAuth>
+                    <Deposit />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/withdraw"
+                element={
+                  <RequireAuth>
+                    <Withdraw />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/history"
+                element={
+                  <RequireAuth>
+                    <History />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/withdrawals"
+                element={
+                  <RequireAuth>
+                    <WithdrawalsHistory />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <RequireAuth>
+                    <About />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/rules"
+                element={
+                  <RequireAuth>
+                    <Rules />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/support"
+                element={
+                  <RequireAuth>
+                    <Support />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/bank"
+                element={
+                  <RequireAuth>
+                    <BankAccount />
+                  </RequireAuth>
+                }
+              />
 
-              <Route path="/admin" element={<RequireAuth admin><AdminLayout /></RequireAuth>}>
+              <Route
+                path="/admin"
+                element={
+                  <RequireAuth admin>
+                    <AdminLayout />
+                  </RequireAuth>
+                }
+              >
                 <Route index element={<Navigate to="users" replace />} />
                 <Route path="users" element={<AdminUsers />} />
                 <Route path="products" element={<AdminProducts />} />

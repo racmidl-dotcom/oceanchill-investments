@@ -18,9 +18,9 @@ import {
 import profileBanner from "@/assets/Capture d’écran du 2026-04-30 01-28-03.png";
 
 const menu1 = [
-  { to: "/profile", icon: FileText, label: "Détails du compte" },
+  { to: "/account", icon: FileText, label: "Détails du compte" },
   { to: "/history", icon: FileText, label: "Historique des recharges" },
-  { to: "/history", icon: FileText, label: "Registres de retrait" },
+  { to: "/withdrawals", icon: FileText, label: "Registres de retrait" },
   { to: "/bank", icon: Building2, label: "Gestion de compte bancaire" },
 ];
 
@@ -45,32 +45,29 @@ export default function Profile() {
       <div className="px-3 pt-3 space-y-4">
         {/* Bandeau taupe header avec logo + infos compte */}
         <div
-          className="relative rounded-md overflow-hidden p-5 text-panel-foreground"
+          className="relative rounded-md overflow-hidden p-5 text-panel-foreground h-36 brightness-110"
           style={{
             backgroundImage: `url(${profileBanner})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="absolute inset-0 bg-panel/60" />
-          <div className="relative">
-            <div className="flex justify-center mb-4">
-              <AppHeader />
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-center">
+          <div className="absolute inset-0 bg-panel/30" />
+          <div className="relative h-full flex items-end">
+            <div className="grid grid-cols-2 gap-2 text-center pb-2 w-full">
               <div>
-                <p className="text-[11px] opacity-80 font-serif">
+                <p className="text-[12px] opacity-80 font-serif">
                   Numéro de téléphone
                 </p>
-                <p className="font-serif font-bold text-lg mt-1">
+                <p className="font-serif font-bold text-xl mt-1">
                   {profile?.phone}
                 </p>
               </div>
               <div>
-                <p className="text-[11px] opacity-80 font-serif">
+                <p className="text-[12px] opacity-80 font-serif">
                   Solde du compte
                 </p>
-                <p className="font-serif font-bold text-lg mt-1">
+                <p className="font-serif font-bold text-xl mt-1">
                   {formatMoney(profile?.balance ?? 0, cur)}
                 </p>
               </div>
