@@ -46,33 +46,17 @@ export default function Withdraw() {
 
     setBusy(true);
 
-    const newBalance = Number(profile.balance ?? 0) - Number(amount);
-    const { error: debitError } = await supabase
-      .from("users")
-      .update({ balance: newBalance })
-      .eq("id", profile.id);
-
-    if (debitError) {
-      setBusy(false);
-      return toast.error("Erreur lors du débit : " + debitError.message);
-    }
-
-    const { error: withdrawError } = await supabase.from("withdrawals").insert({
-      user_id: profile.id,
-      amount,
-      fee,
-      net_amount: net,
-      operator,
-      phone: bank.phone,
+    const { error: withdrawError } = await supabase.rpc("create_withdrawal", {
+      p_amount: amount,
+      p_fee: fee,
+      p_net_amount: net,
+      p_operator: operator,
+      p_phone: bank.phone,
     });
 
     if (withdrawError) {
-      await supabase
-        .from("users")
-        .update({ balance: Number(profile.balance ?? 0) })
-        .eq("id", profile.id);
       setBusy(false);
-      return toast.error("Erreur : " + withdrawError.message);
+      return toast.error(withdrawError.message);
     }
 
     await refetchProfile();

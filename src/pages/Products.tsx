@@ -33,34 +33,11 @@ export default function Products() {
       return;
     }
     setBusy(true);
-    const currentBalance = Number(profile.balance ?? 0);
-    const nextBalance = currentBalance - Number(target.price);
-    const { error: debitError } = await supabase
-      .from("users")
-      .update({ balance: nextBalance })
-      .eq("id", profile.id);
-    if (debitError) {
-      toast.error("Erreur lors du débit : " + debitError.message);
-      setBusy(false);
-      return;
-    }
-    const end = new Date(
-      Date.now() + target.duration_days * 86400000,
-    ).toISOString();
-    const { error: e1 } = await supabase.from("investments").insert({
-      user_id: profile.id,
-      product_id: target.id,
-      amount: target.price,
-      daily_revenue: target.daily_revenue,
-      total_revenue: target.total_revenue,
-      end_date: end,
+    const { error } = await supabase.rpc("purchase_product", {
+      p_product_id: target.id,
     });
-    if (e1) {
-      await supabase
-        .from("users")
-        .update({ balance: currentBalance })
-        .eq("id", profile.id);
-      toast.error(e1.message);
+    if (error) {
+      toast.error(error.message);
       setBusy(false);
       return;
     }

@@ -38,16 +38,12 @@ export default function AdminWithdrawals() {
     load();
   }, []);
 
-  const update = async (id: string, status: string, refund?: any) => {
+  const update = async (id: string, status: string) => {
     const { error } = await supabase
       .from("withdrawals")
       .update({ status })
       .eq("id", id);
     if (error) return toast.error(error.message);
-    if (status === "rejected" && refund) {
-      const balance = Number(refund.user?.balance ?? 0) + Number(refund.amount);
-      await supabase.from("users").update({ balance }).eq("id", refund.user_id);
-    }
     toast.success("Mis à jour");
     load();
   };
@@ -125,7 +121,7 @@ export default function AdminWithdrawals() {
                             <Button
                               size="sm"
                               variant="destructive"
-                              onClick={() => update(r.id, "rejected", r)}
+                              onClick={() => update(r.id, "rejected")}
                             >
                               Rejet
                             </Button>
