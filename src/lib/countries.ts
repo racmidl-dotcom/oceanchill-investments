@@ -1,4 +1,13 @@
-export type CountryCode = "BF" | "BJ" | "CI" | "CM" | "CD" | "NE" | "SN" | "TG";
+export type CountryCode =
+  | "BF"
+  | "BJ"
+  | "CI"
+  | "CM"
+  | "CD"
+  | "ML"
+  | "NE"
+  | "SN"
+  | "TG";
 
 export interface Country {
   code: CountryCode;
@@ -49,6 +58,14 @@ export const COUNTRIES: Country[] = [
     dial: "+243",
     currency: "CDF",
     operators: ["Orange Money", "Airtel Money"],
+  },
+  {
+    code: "ML",
+    name: "Mali",
+    flag: "🇲🇱",
+    dial: "+223",
+    currency: "XOF",
+    operators: ["Orange ML"],
   },
   {
     code: "NE",
